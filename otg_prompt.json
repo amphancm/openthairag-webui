@@ -1,0 +1,362 @@
+{
+    "info": {
+        "_postman_id": "059306f1-5a42-4f6b-bed0-1585049337b5",
+        "name": "otg_prompt",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "Create Setting",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:5000/setting",
+                    "path": [
+                        "setting"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"line_key\":\"\",\n  \"line_secret\": \"\"\n}"
+                }
+            }
+        },
+        {
+            "name": "Get Setting",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:5000/setting",
+                    "path": [
+                        "setting"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                }
+            }
+        },
+        {
+            "name": "Patch Setting",
+            "request": {
+                "method": "PATCH",
+                "url": {
+                    "raw": "http://localhost:5000/setting",
+                    "path": [
+                        "setting"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"id\":  \"\",\n  \"line_key\":\"\",\n  \"line_secret\": \"\"\n}"
+                }
+            }
+        },
+        {
+            "name": "system_prompt",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:5000/system_prompt",
+                    "path": [
+                        "system_prompt"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"content\": \"ต่อไปนี้คุณคือ Sale Administrator ของบริษัท 365infotect ผู้ให้บริการ outsource โดยมีทีใงานผ็มีความเป็นมืออาชีพมากกว่า 20 ปีได้\\nความสามารถของคุณคือ\\n-สามารถถามให้ข้อมูลลูกค้าเรื่องผลิตภัณฑ์ ต่างๆของบริษัทได้\\n-สามารถรับความต้องการของลูกค้าได้ เช่น\\n  1.ลูกค้าต้องการสอบถามเรื่อง ตำแหน่งงานของ outsource ที่ต้องการ และเสนอ บริการเท่าที่มีเท่านั้น\\n  2.สามารถรถเสนอราคาได้ โดย outsource แต่ละคนจะมีราคา \\n    สายงาน Programmer 10,000 บาท/คน/เดือน\\n    สายงาน IT Support 20,000 บาท/คน/เดือน\\n    สายงาน Network Engineer 30,000 บาท/คน/เดือน\\n  3.สามารถให้ข้อมูลการติดต่อเพิ่มเติมได้ เช่น \\n    เบอร์โทรศัพย์ 081-2505191\\n    email sunnypdater@gmail.com\\n    ที่อยู่ 21/1 ราชวิถี ซอย 9 ถ.ราชวิถี แขวงถนนพญาไท เขตราชเทวี กรุงเทพมหานคร 10400\\n  4.การตอบคำถามลูกค้า เป็นแบบ มืออาชีพ และสรุปข้อมูล แบบเป็นรายข้อ เพื่อให้ลูกค้าเห็นข้อมูลแบบดีขึ้น\"\n}"
+                }
+            }
+        },
+        {
+            "name": "get system_prompt",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:5000/system_prompt",
+                    "path": [
+                        "system_prompt"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                }
+            }
+        },
+        {
+            "name": "Patch system prompt",
+            "request": {
+                "method": "PATCH",
+                "url": {
+                    "raw": "http://localhost:5000/system_prompt",
+                    "path": [
+                        "system_prompt"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"id\":  \"\",\n  \"content\": \"\"\n}"
+                }
+            }
+        },
+        {
+            "name": "create document",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:5000/document",
+                    "path": [
+                        "document"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"title\": \"\",\n  \"content\": \"\"\n}"
+                }
+            }
+        },
+        {
+            "name": "list document",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:5000/document",
+                    "path": [
+                        "document"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                }
+            }
+        },
+        {
+            "name": "patch document",
+            "request": {
+                "method": "PATCH",
+                "url": {
+                    "raw": "http://localhost:5000/document",
+                    "path": [
+                        "document"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"id\": \"\",\n  \"title\": \"\",\n  \"content\": \"ต่อไปนี้คุณคือ Sale Administrator ของบริษัท 365infotect ผู้ให้บริการ outsource โดยมีทีใงานผ็มีความเป็นมืออาชีพมากกว่า 20 ปีได้\\nความสามารถของคุณคือ\\n-สามารถถามให้ข้อมูลลูกค้าเรื่องผลิตภัณฑ์ ต่างๆของบริษัทได้\\n-สามารถรับความต้องการของลูกค้าได้ เช่น\\n  1.ลูกค้าต้องการสอบถามเรื่อง ตำแหน่งงานของ outsource ที่ต้องการ และเสนอ บริการเท่าที่มีเท่านั้น\\n  2.สามารถรถเสนอราคาได้ โดย outsource แต่ละคนจะมีราคา \\n    สายงาน Programmer 10,000 บาท/คน/เดือน\\n    สายงาน IT Support 20,000 บาท/คน/เดือน\\n    สายงาน Network Engineer 30,000 บาท/คน/เดือน\\n  3.สามารถให้ข้อมูลการติดต่อเพิ่มเติมได้ เช่น \\n    เบอร์โทรศัพย์ 081-2505191\\n    email sunnypdater@gmail.com\\n    ที่อยู่ 21/1 ราชวิถี ซอย 9 ถ.ราชวิถี แขวงถนนพญาไท เขตราชเทวี กรุงเทพมหานคร 10400\\n  4.การตอบคำถามลูกค้า เป็นแบบ มืออาชีพ และสรุปข้อมูล แบบเป็นรายข้อ เพื่อให้ลูกค้าเห็นข้อม\",\n  \"doc_id\": 454330074246414735\n}"
+                }
+            }
+        },
+        {
+            "name": "chat option",
+            "request": {
+                "method": "PATCH",
+                "url": {
+                    "raw": "http://localhost:5000/room_option",
+                    "path": [
+                        "room_option"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"chatOption\":{\n    \"name\": \"\",\n    \"temperature\": \"0.4\",\n    \"systemPrompt\": \"\"\n  },\n  \"message\":[]\n}"
+                }
+            }
+        },
+        {
+            "name": "delete document Copy",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://localhost:5000/document/674d7e3313fb9d3935bf12da",
+                    "path": [
+                        "document",
+                        "674d7e3313fb9d3935bf12da"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "header": [
+                    {
+                        "key": "User-Agent",
+                        "value": "Thunder Client (https://www.thunderclient.com)",
+                        "disabled": true
+                    }
+                ]
+            }
+        },
+        {
+            "name": "get chat option",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:5000/room_option",
+                    "path": [
+                        "room_option"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                }
+            }
+        },
+        {
+            "name": "chat option",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:5000/room_option",
+                    "path": [
+                        "room_option"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"chatOption\":{\n    \"name\": \"\",\n    \"temperature\": \"\",\n    \"systemPrompt\": \"\"\n  },\n  \"message\":[]\n}"
+                }
+            }
+        },
+        {
+            "name": "delete chatroom",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://localhost:5000/room_option/674f2927912a8a4eecb9d208",
+                    "path": [
+                        "room_option",
+                        "674f2927912a8a4eecb9d208"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "header": [
+                    {
+                        "key": "User-Agent",
+                        "value": "Thunder Client (https://www.thunderclient.com)",
+                        "disabled": true
+                    }
+                ]
+            }
+        },
+        {
+            "name": "chat submit",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:5000/chat_history",
+                    "path": [
+                        "chat_history"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "5000"
+                },
+                "body": {
+                    "mode": "raw",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    },
+                    "raw": "{\n  \"id\": \"\",\n  \"systemPrompt\": \"\",\n  \"message\": \"\"\n}"
+                }
+            }
+        }
+    ]
+}
