@@ -41,4 +41,4 @@
   6. ทำการ verify และทดสอบใช้งาน
 
 การแก้ปัญหาเบื้องต้น
-  - ถ้าใช้งานไม่ได้ ให้ทำการปิด docker-compose down และ docker-compose down อีกครั้ง
+  - ถ้าใช้งานไม่ได้ ให้ทำการปิด docker-compose down และ docker-compose up อีกครั้ง
