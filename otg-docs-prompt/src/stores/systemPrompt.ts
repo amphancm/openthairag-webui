@@ -9,8 +9,6 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
       try {
         const response = await fetch('http://localhost:5500/system_prompt')
         const data = await response.json()
-        console.log(' response :', response)
-        console.log(' data :', data)
         data.forEach((element: { _id: { $oid: string }; content: string; temperature: string }) => {
           this.systemPrompts = {
             id: element._id.$oid,

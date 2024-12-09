@@ -16,14 +16,12 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
       try {
         const response = await fetch('http://localhost:5500/room_option')
         const data = await response.json()
-        console.log('data', data)
         data.forEach(
           (element: {
             _id: { $oid: string }
             chatOption: { name: string; temperature: string; systemPrompt: string }
             messages: Array<{ role: string; content: string }>
           }) => {
-            console.log('element :', element)
             this.chatRoom[element._id.$oid] = {
               id: element._id.$oid,
               chatOption: element.chatOption,

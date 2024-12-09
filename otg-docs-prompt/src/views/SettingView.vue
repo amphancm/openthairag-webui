@@ -62,9 +62,7 @@ onMounted(async () => {
 })
 
 async function handleSave() {
-  console.log(setting.value.id)
   if (!setting.value.id) {
-    console.log('Block')
     await settingStore.createSetting({
       line_key: setting.value.line_key,
       line_secret: setting.value.line_secret,

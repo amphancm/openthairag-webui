@@ -9,8 +9,6 @@ export const useDocumentStore = defineStore('documentStore', {
       try {
         const response = await fetch('http://localhost:5500/document')
         const data = await response.json()
-        console.log(' response :', response)
-        console.log(' data :', data)
         data.forEach((element: { id: string; title: string; content: string; doc_id: string }) => {
           this.documents[element.id] = {
             id: element.id,

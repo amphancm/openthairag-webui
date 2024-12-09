@@ -185,7 +185,6 @@ watch(
 )
 
 watch(inputMessage, (newValue) => {
-  console.log('inputMessage', inputMessage.value)
   if (newValue.trim() !== '') {
     isUserTyping.value = true
   } else {
@@ -195,13 +194,11 @@ watch(inputMessage, (newValue) => {
 
 async function handleSubmitMessage() {
   if (chatRoomsList.length == 0) {
-    console.log('Submit no cresata')
     openCreateModalSystemPrompt()
   } else {
     const messageContent = inputMessage.value
     inputMessage.value = ''
     if (messageContent.trim() != '') {
-      console.log('Push')
       isAssistantTyping.value = true
       nextTick(() => {
         if (messagesContainer.value) {
@@ -252,8 +249,6 @@ function openCreateModalSystemPrompt() {
 
 function openModalSystemPrompt() {
   type.value = 'edit'
-  console.log('selectIndexing :', selectIndexing.value)
-  console.log('chatRoomsList :', chatRoomsList)
   name.value = chatRoomsList[selectIndexing.value].chatOption.name
   systemPrompt.value = chatRoomsList[selectIndexing.value].chatOption.systemPrompt
   temperature.value = chatRoomsList[selectIndexing.value].chatOption.temperature
@@ -296,7 +291,6 @@ async function handleConfirmSystemPrompt() {
 }
 
 async function handleConfirmDelete() {
-  console.log(' Delete Confirmed!', chatRoomsList[selectIndexing.value])
   await chatRoomsStore.deleteChatRooms(chatRoomsList[selectIndexing.value].id)
   closeModalDelete()
 }

@@ -62,9 +62,7 @@ onMounted(async () => {
 })
 
 async function handleSave() {
-  console.log(system_prompt.value.id)
   if (!system_prompt.value.id) {
-    console.log('Block')
     await systemPromptStore.createSystemPrompt({
       content: system_prompt.value.content,
       temperature: system_prompt.value.temperature,

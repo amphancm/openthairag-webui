@@ -9,8 +9,6 @@ export const useSettingStore = defineStore('SettingStore', {
       try {
         const response = await fetch('http://localhost:5500/setting')
         const data = await response.json()
-        console.log(' response :', response)
-        console.log(' data :', data)
         data.forEach(
           (element: { _id: { $oid: string }; line_key: string; line_secret: string }) => {
             this.Settings = {
