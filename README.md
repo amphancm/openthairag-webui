@@ -1,4 +1,9 @@
-สวัสดีครับ Project นี้เป็น Project ที่ใช้สำหรับการทำสอบ Model OpenThaiGPT โดยผม ทำการเพิ่ม
+สวัสดีครับ Project นี้เป็น Project ที่ใช้สำหรับการทำสอบ Model OpenThaiGP โดยการสร้าง เป็น Application ให้ทุกคนได้ใช้งาน ได้ง่ายขึ้นผ่าน WebUI โดยใช้
+  Backend - Flask (openthairag custom repo)
+  Frontend - Vue3 + vite
+  Database - Mongo DB
+  Vector Database Milvas (openthairag custom repo)
+
 - ระบบ WebUI ให้สามารถ
   - เพิ่ม/ลบ/แก้ไข Document ได้เอง โดยที่ไม่ต้องใช้คำสั่ง
   - สามารถตั้งค่า System Prompt ได้โดยไม่ต้องใส่ ใน code
