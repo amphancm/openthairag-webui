@@ -1,4 +1,5 @@
-สวัสดีครับ Project นี้เป็น Project ที่ใช้สำหรับการทำสอบ Model OpenThaiGP โดยการสร้าง เป็น Application ให้ทุกคนได้ใช้งาน ได้ง่ายขึ้นผ่าน WebUI โดยใช้
+สวัสดีครับ Project นี้เป็น Project ที่ใช้สำหรับการทำสอบ Model OpenThaiGPT (https://github.com/OpenThaiGPT/openthairag)
+โดยการสร้าง เป็น Application ให้ทุกคนได้ใช้งาน ได้ง่ายขึ้นผ่าน WebUI โดยใช้
   
   - Backend - Flask (openthairag custom repo)
   - Frontend - Vue3 + vite
