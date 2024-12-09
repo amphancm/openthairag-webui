@@ -18,3 +18,6 @@
   4. ทำการกดบันทึก Save
   5. ทำการ link webhook ของ Line กับ ตัว webui (ถ้าใคร ไม่มี server สามารถ ใช้ function port ใน vscode ได้ https://code.visualstudio.com/docs/editor/port-forwarding)
   6. ทำการ verify และทดสอบใช้งาน
+
+การแก้ปัญหาเบื้องต้น
+  - ถ้าใช้งานไม่ได้ ให้ทำการปิด docker-compose down และ docker-compose down อีกครั้ง
