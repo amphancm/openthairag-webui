@@ -7,7 +7,7 @@ export const useDocumentStore = defineStore('documentStore', {
   actions: {
     async fetchDocuments() {
       try {
-        const response = await fetch('http://localhost:5000/document')
+        const response = await fetch('http://localhost:5500/document')
         const data = await response.json()
         console.log(' response :', response)
         console.log(' data :', data)
@@ -25,7 +25,7 @@ export const useDocumentStore = defineStore('documentStore', {
     },
     async createDocument(newDoc: { title: string; content: string }) {
       try {
-        await fetch('http://localhost:5000/document', {
+        await fetch('http://localhost:5500/document', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newDoc),
@@ -36,7 +36,7 @@ export const useDocumentStore = defineStore('documentStore', {
     },
     async saveDocument(newDoc: { id: string; title: string; content: string; doc_id: string }) {
       try {
-        const response = await fetch('http://localhost:5000/document', {
+        const response = await fetch('http://localhost:5500/document', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newDoc),
@@ -49,7 +49,7 @@ export const useDocumentStore = defineStore('documentStore', {
     },
     async deleteDocument(id: string) {
       try {
-        await fetch('http://localhost:5000/document/' + id, {
+        await fetch('http://localhost:5500/document/' + id, {
           method: 'DELETE',
         })
         delete this.documents[id]

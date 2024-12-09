@@ -14,7 +14,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
   actions: {
     async fetchChatRooms() {
       try {
-        const response = await fetch('http://localhost:5000/room_option')
+        const response = await fetch('http://localhost:5500/room_option')
         const data = await response.json()
         console.log('data', data)
         data.forEach(
@@ -40,7 +40,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
       chatOption: { name: string; temperature: string; systemPrompt: string }
     }) {
       try {
-        const response = await fetch('http://localhost:5000/room_option', {
+        const response = await fetch('http://localhost:5500/room_option', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config),
@@ -55,7 +55,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
       messages: Array<{ role: string; content: string }>
     }) {
       try {
-        const response = await fetch('http://localhost:5000/room_option', {
+        const response = await fetch('http://localhost:5500/room_option', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config),
@@ -72,7 +72,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
     },
     async deleteChatRooms(id: string) {
       try {
-        await fetch('http://localhost:5000/room_option/' + id, {
+        await fetch('http://localhost:5500/room_option/' + id, {
           method: 'DELETE',
         })
         delete this.chatRoom[id]
@@ -91,7 +91,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
           role: 'user',
           content: message.message,
         })
-        const response = await fetch('http://localhost:5000/chat_history', {
+        const response = await fetch('http://localhost:5500/chat_history', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(message),

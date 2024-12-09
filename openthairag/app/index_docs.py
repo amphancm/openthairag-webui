@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-def read_and_index_docs(docs_dir='./docs', index_url='http://localhost:5000/index'):
+def read_and_index_docs(docs_dir='./docs', index_url='http://localhost:5500/index'):
     """
     Read .txt files from the specified directory and index their contents.
     

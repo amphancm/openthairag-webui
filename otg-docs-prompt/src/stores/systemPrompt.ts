@@ -7,7 +7,7 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
   actions: {
     async fetchSystemPrompts() {
       try {
-        const response = await fetch('http://localhost:5000/system_prompt')
+        const response = await fetch('http://localhost:5500/system_prompt')
         const data = await response.json()
         console.log(' response :', response)
         console.log(' data :', data)
@@ -24,7 +24,7 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
     },
     async createSystemPrompt(newSystemPrompt: { content: string; temperature: string }) {
       try {
-        const response = await fetch('http://localhost:5000/system_prompt', {
+        const response = await fetch('http://localhost:5500/system_prompt', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSystemPrompt),
@@ -41,7 +41,7 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
     },
     async saveSystemPrompt(newSystemPrompt: { id: string; content: string; temperature: string }) {
       try {
-        const response = await fetch('http://localhost:5000/system_prompt', {
+        const response = await fetch('http://localhost:5500/system_prompt', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSystemPrompt),

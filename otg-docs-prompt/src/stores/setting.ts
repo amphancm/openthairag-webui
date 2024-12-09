@@ -7,7 +7,7 @@ export const useSettingStore = defineStore('SettingStore', {
   actions: {
     async fetchSettings() {
       try {
-        const response = await fetch('http://localhost:5000/setting')
+        const response = await fetch('http://localhost:5500/setting')
         const data = await response.json()
         console.log(' response :', response)
         console.log(' data :', data)
@@ -26,7 +26,7 @@ export const useSettingStore = defineStore('SettingStore', {
     },
     async createSetting(newSetting: { line_key: string; line_secret: string }) {
       try {
-        const response = await fetch('http://localhost:5000/setting', {
+        const response = await fetch('http://localhost:5500/setting', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSetting),
@@ -43,7 +43,7 @@ export const useSettingStore = defineStore('SettingStore', {
     },
     async saveSetting(newSetting: { id: string; line_key: string; line_secret: string }) {
       try {
-        const response = await fetch('http://localhost:5000/setting', {
+        const response = await fetch('http://localhost:5500/setting', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSetting),

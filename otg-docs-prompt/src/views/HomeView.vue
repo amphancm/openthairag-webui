@@ -246,7 +246,7 @@ function openCreateModalSystemPrompt() {
   type.value = 'create'
   name.value = ''
   systemPrompt.value = system_prompt.value.content
-  temperature.value = '0.4'
+  temperature.value = system_prompt.value.temperature
   isModalSystemPromptOpen.value = true
 }
 
