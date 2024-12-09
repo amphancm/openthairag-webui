@@ -146,7 +146,8 @@ def system_prompt():
         },
         {
             "$set":{
-                'content': data['content']
+                'content': data['content'],
+                'temperature': data['temperature']
             }
         })
         return jsonify({
