@@ -5,13 +5,13 @@
   - ระบบทดสอบ Prompt ในรูป แปป chat ที่สามารถ แก้ไข Prompt ได้
   - ระบบ settting ที่สามารถเชื่อมต่อกับ line ได้ทันที อ่านได้ที่หัวข้อ #Line ChatBot
 
-#วิธีการใช้งาน
+#วิธีการติดตั้ง
   1. docker-compose build
   2. docker-compose up
   3. Goto localhost:8080 (Frontend)
   4. Goto localhost:5000 (Backend)
 
-การใช้งาน Prompt Lab
+#การใช้งาน Prompt Lab
   1. ให้ทำการ เข้าไปที่ Document และทำการ ใส่องค์ความรู้ในเรื่องที่จะให้ AI Scope เข้าไป ความรู้ วัดพระมหาธาตุ หรือ Kob description ที่อยากให้ AI เรียนรู้เเข้าไป พร้อมตั้งชื่อเรื่อง
   2. เข้าไปที่ system prompt และกรอกข้อมูล
      
