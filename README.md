@@ -12,6 +12,9 @@
   4. Goto localhost:5000 (Backend)
 
 #Line ChatBot
+  1. เปิดหน้า system prompt ขึ้นมา และกรอกข้อมูล
+    - Temperature (ความซื่อตรงของข้อมูล มีค่า 0.1-1.0 ยิ่งเลขเยอะความคิดสร้างสรรค์เยอะ ยิ่งเลขน้อยยิ่งซื่อตรง )
+    - System Prompt (ตัวตนของ AI ที่เราอยากให้เป็น เช่น ตอนนี้คุณคือ AI เลขาที่ช่วย ตอบคำถามลูกค้า ที่ติดต่อเข้ามาเพื่อสอบถาม Promotion ของสินค้า. เป็นต้น โดยยิ่งข้อมูลละเอียด AI ยิ่งตอบตรงคำถามขึ้น)
   1. เปิดหน้า settings ขึ้นมา และนำข้อมูลจาก Line Developer มาใส่ให้ถูกต้อง
   2. นำ Channel Key มาใส่ในช่อง Line Secret Channel Key 
   3. generate Channel access token และนำ มาใส่ในช่อง Line Issue Key
