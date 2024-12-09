@@ -43,3 +43,7 @@
 
 การแก้ปัญหาเบื้องต้น
   - ถ้าใช้งานไม่ได้ ให้ทำการปิด docker-compose down และ docker-compose up อีกครั้ง
+
+---------------------------------------------------------------
+Postman Document API
+- /openthairag-webui/otg_prompt.json
