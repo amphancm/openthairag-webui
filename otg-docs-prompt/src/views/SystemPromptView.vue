@@ -11,6 +11,8 @@
           </div>
           <div class="flex-4 w-full">
             <input
+              type="number"
+              @input="validateInput"
               v-model="system_prompt.temperature"
               id="content"
               rows="4"
@@ -88,6 +90,14 @@ function openModal() {
 }
 function closeModal() {
   isSuccess.value = false;
+}
+
+function validateInput() {
+  const value = parseFloat(system_prompt.value.temperature);
+
+  if (value < 0 || value > 1 || isNaN(value)) {
+    system_prompt.value.temperature = ''; // Reset invalid input
+  }
 }
 
 async function handleSave() {

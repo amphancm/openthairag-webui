@@ -117,7 +117,9 @@
       <h5 class="pb-2">Name :</h5>
       <input class="border-2 border-blue-500 rounded-md w-full p-4 mb-2" v-model="name" />
       <h5 class="pb-2">Temperature :</h5>
-      <input class="border-2 border-blue-500 rounded-md w-full p-4 mb-2" v-model="temperature" />
+      <input class="border-2 border-blue-500 rounded-md w-full p-4 mb-2" v-model="temperature" 
+      @input="validateInput" type="number"
+      />
       <h5 class="pb-2">System Prompt :</h5>
       <textarea
         class="border-2 border-blue-500 rounded-md w-full p-4 h-[300px]"
@@ -185,6 +187,14 @@ const chatRooms = computed(() => chatRoomsStore.chatRoom) // Replace `chatRoom` 
 
 const systemPromptStore = useSystemPromptStore()
 const system_prompt = computed(() => systemPromptStore.systemPrompts)
+
+function validateInput() {
+  const value = parseFloat(temperature.value);
+
+  if (value < 0 || value > 1 || isNaN(value)) {
+    temperature.value = ''; // Reset invalid input
+  }
+}
 
 let chatRoomsList: {
   id: string
