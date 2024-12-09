@@ -1,21 +1,22 @@
 สวัสดีครับ Project นี้เป็น Project ที่ใช้สำหรับการทำสอบ Model OpenThaiGP โดยการสร้าง เป็น Application ให้ทุกคนได้ใช้งาน ได้ง่ายขึ้นผ่าน WebUI โดยใช้
-  Backend - Flask (openthairag custom repo)
-  Frontend - Vue3 + vite
-  Database - Mongo DB
-  Vector Database Milvas (openthairag custom repo)
-
-- ระบบ WebUI ให้สามารถ
+  
+  - Backend - Flask (openthairag custom repo)
+  - Frontend - Vue3 + vite
+  - Database - Mongo DB
+  - Vector Database Milvas (openthairag custom repo)
+---------------------------------------------------------------
+#Feature 
   - เพิ่ม/ลบ/แก้ไข Document ได้เอง โดยที่ไม่ต้องใช้คำสั่ง
   - สามารถตั้งค่า System Prompt ได้โดยไม่ต้องใส่ ใน code
   - ระบบทดสอบ Prompt ในรูป แปป chat ที่สามารถ แก้ไข Prompt ได้
   - ระบบ settting ที่สามารถเชื่อมต่อกับ line ได้ทันที อ่านได้ที่หัวข้อ #Line ChatBot
-
+---------------------------------------------------------------
 #วิธีการติดตั้ง
   1. docker-compose build
   2. docker-compose up
   3. Goto localhost:8080 (Frontend)
   4. Goto localhost:5000 (Backend)
-
+---------------------------------------------------------------
 #การใช้งาน Prompt Lab
   1. ให้ทำการ เข้าไปที่ Document และทำการ ใส่องค์ความรู้ในเรื่องที่จะให้ AI Scope เข้าไป ความรู้ วัดพระมหาธาตุ หรือ Kob description ที่อยากให้ AI เรียนรู้เเข้าไป พร้อมตั้งชื่อเรื่อง
   2. เข้าไปที่ system prompt และกรอกข้อมูล
@@ -25,7 +26,7 @@
 
   3. ไปที่ Prompt Lab และทำการสร้างหน้า Chat room ขึ้นมา และทำการ ใส่ชื่อและกรแกข้อมูลทั้งหมด เมื่อเสร็จแล้วทำการกด Confirm
   4. ใช้งานโดยการ พิมที่ กล่องข้อความ และกด enter หรือ กดที่ icon ส่งข้อความข้างๆ เพื่อส่งข้อความไปให้ AI และรอผลลัพธ์ที่ตอบกลับมา
-
+---------------------------------------------------------------
 #Line ChatBot
   1. เปิดหน้า system prompt ขึ้นมา และกรอกข้อมูล
      
