@@ -47,6 +47,27 @@
       <div class="loading">Loading...</div>
     </div>
   </div>
+
+  <div
+      v-if="isSuccess"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+        <h2 class="text-lg font-semibold text-green-600">Success!</h2>
+        <p class="mt-2 text-gray-600">
+          Your operation was completed successfully.
+        </p>
+        <div class="flex justify-end mt-4">
+          <button
+            @click="closeModal"
+            class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -56,10 +77,18 @@ import { computed, onMounted, ref } from 'vue'
 const systemPromptStore = useSystemPromptStore()
 const system_prompt = computed(() => systemPromptStore.systemPrompts)
 const isLoading = ref(false)
+const isSuccess = ref(false)
 
 onMounted(async () => {
   await systemPromptStore.fetchSystemPrompts()
 })
+
+function openModal() {
+  isSuccess.value = true;
+}
+function closeModal() {
+  isSuccess.value = false;
+}
 
 async function handleSave() {
   if (!system_prompt.value.id) {
@@ -67,6 +96,7 @@ async function handleSave() {
       content: system_prompt.value.content,
       temperature: system_prompt.value.temperature,
     })
+    openModal()
   } else {
     isLoading.value = true
     try {
@@ -78,6 +108,7 @@ async function handleSave() {
     } catch (error) {
       console.error('Error deleting document:', error)
     } finally {
+      openModal()
       isLoading.value = false
     }
   }
