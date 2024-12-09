@@ -1,0 +1,13 @@
+flask
+flask-cors
+pymilvus==2.4.7
+transformers
+torch
+scikit-learn
+gunicorn
+numpy
+pymongo
+openai
+line-bot-sdk==2.0.1
+dnspython==2.3.0
+openai==0.28
