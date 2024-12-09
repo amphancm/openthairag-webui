@@ -240,7 +240,6 @@ async function handleSubmitMessage() {
         temperature: chatRoomsList[selectIndexing.value].chatOption.temperature,
         message: messageContent,
       })
-      openModal()
       isAssistantTyping.value = false
       nextTick(() => {
         if (messagesContainer.value) {
