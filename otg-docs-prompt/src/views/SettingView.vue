@@ -7,7 +7,7 @@
       <div class="overflow-x-auto w-full">
         <div class="flex mt-4">
           <div class="w-72 flex text-left items-center">
-            <h4 for="title" class="text-black">Line Issue Key</h4>
+            <h4 for="title" class="text-black">Line Issue Token</h4>
           </div>
           <div class="flex-4 w-full">
             <input

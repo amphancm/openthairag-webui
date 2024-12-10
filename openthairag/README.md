@@ -43,7 +43,7 @@ To install and run OpenThaiRAG using Docker Compose, follow these steps:
    - Start the MinIO service
    - Link all services together as defined in the docker-compose.yml file
 
-4. Once all containers are up and running, the OpenThaiRAG API will be available at `http://localhost:5000`.
+4. Once all containers are up and running, the OpenThaiRAG API will be available at `http://localhost:5500`.
 
 5. To stop the services, run:
    ```
@@ -95,7 +95,7 @@ To insert new documents into the RAG system, you can use the `index_docs.py` scr
    This script will:
    - Read all .txt files in the `/docs` directory.
    - Split each document into chunks of maximum 200 characters, including the title in each chunk.
-   - Send each chunk to the indexing endpoint (http://localhost:5000/index by default).
+   - Send each chunk to the indexing endpoint (http://localhost:5500/index by default).
 
 3. Monitor the indexing process:
    - The script will log information about each indexed file.
@@ -182,7 +182,7 @@ Note: Some parameters may not be applicable depending on the specific model and 
 ### via API: Non-Streaming
 ```bash
 >>>Request
-curl --location 'http://localhost:5000/completions' \
+curl --location 'http://localhost:5500/completions' \
 --header 'Content-Type: application/json' \
 --data '{
     "prompt": "วัดพระแก้ว กทม. คืออะไร",
@@ -217,7 +217,7 @@ curl --location 'http://localhost:5000/completions' \
 ### via API: Streaming
 ```bash
 >>>Request
-curl --location 'http://localhost:5000/completions' \
+curl --location 'http://localhost:5500/completions' \
 --header 'Content-Type: application/json' \
 --data '{
     "prompt": "วัดพระแก้ว กทม. คืออะไร",

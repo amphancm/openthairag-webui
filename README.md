@@ -36,7 +36,7 @@
     
   1. เปิดหน้า settings ขึ้นมา และนำข้อมูลจาก Line Developer มาใส่ให้ถูกต้อง
   2. นำ Channel Key มาใส่ในช่อง Line Secret Channel Key 
-  3. generate Channel access token และนำ มาใส่ในช่อง Line Issue Key
+  3. generate Channel access token และนำ มาใส่ในช่อง Line Issue Token
   4. ทำการกดบันทึก Save
   5. ทำการ link webhook ของ Line กับ ตัว webui โดยใช้ url ของ คุณ และ Path : /line_callback เช่น https://example.com/line_callback (ถ้าใคร ไม่มี server สามารถ ใช้ function port ใน vscode ได้ https://code.visualstudio.com/docs/editor/port-forwarding)
   6. ทำการ verify และทดสอบใช้งาน
