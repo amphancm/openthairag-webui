@@ -326,8 +326,8 @@ def system_history():
         otg = compute_model(
             data['message'],
             result[0]['messages'],
-            data['systemPrompt'],
-            data['temperature']
+            data['systemPrompt'] if 'systemPrompt' in data else '' ,
+            data['temperature'] if 'temperature' in data else 0.5
         )
 
         message = {
@@ -549,8 +549,8 @@ def line_callback():
         otg = compute_model(
             query,
             arr_history,
-            system_prompt,
-            temperature,
+            system_prompt if system_prompt else '',
+            temperature if temperature else 0.5,
         )
 
         mongo.lineMessage.update_one({
