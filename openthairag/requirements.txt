@@ -11,3 +11,7 @@ openai
 line-bot-sdk==2.0.1
 dnspython==2.3.0
 openai==0.28
+flask_swagger_ui
+flask-jwt-extended
+pyjwt<2.10
+python-socketio[client]

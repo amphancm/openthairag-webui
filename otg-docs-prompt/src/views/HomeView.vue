@@ -17,7 +17,7 @@
                 : 'bg-white'
             "
           >
-            <p>{{ chatRoom.chatOption.name }}</p>
+            <p class=" overflow-clip text-nowrap hover:animate-marquee">{{ chatRoom.chatOption.name }}</p>
           </div>
         </div>
         <div class="flex-none">
@@ -206,6 +206,10 @@ onMounted(async () => {
   await chatRoomsStore.fetchChatRooms()
   await systemPromptStore.fetchSystemPrompts()
   chatRoomsList = Object.values(chatRooms.value)
+  selectIndexing.value = chatRoomsList.length > 0 ? chatRoomsList.length - 1 : 0;
+  if (messagesContainer.value) {
+    messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
+  }
 })
 
 function openModal() {
@@ -262,6 +266,11 @@ async function handleSubmitMessage() {
 
 function selectRoom(index: number) {
   selectIndexing.value = index
+  nextTick(() => {
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+    }
+  })
 }
 
 function toggleSubmenu() {
