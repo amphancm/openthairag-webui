@@ -20,12 +20,6 @@ services:
     build: ./otg-docs-prompt
     ports:
       - "8080:80"
-  
-  websocket-server:
-    build: ./websocket
-    ports:
-      - "8000:8000"
-    restart: always
 
   milvus:
     container_name: milvus-standalone
