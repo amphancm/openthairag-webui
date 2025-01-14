@@ -5,33 +5,70 @@
     </div>
     <div class="flex parent overflow-y-auto mt-4">
       <div class="overflow-x-auto w-full">
-        <div class="flex mt-4">
-          <div class="w-72 flex text-left items-center">
-            <h4 for="title" class="text-black">Line Issue Token</h4>
+        <div>
+          <h1>Line bot Setting</h1>
+          <div class="flex mt-4">
+            <div class="w-72 flex text-left items-center">
+              <h4 for="title" class="text-black">Line Issue Token</h4>
+            </div>
+            <div class="flex-4 w-full">
+              <input
+                v-model="setting.line_key"
+                id="content"
+                rows="4"
+                class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter Line API Key "
+              />
+            </div>
           </div>
-          <div class="flex-4 w-full">
-            <input
-              v-model="setting.line_key"
-              id="content"
-              rows="4"
-              class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Enter Line API Key "
-            />
+
+          <div class="flex mt-4">
+            <div class="w-72 flex text-left items-center">
+              <h4 for="title" class="text-black">Line Secret Channel Key</h4>
+            </div>
+            <div class="flex-4 w-full">
+              <input
+                v-model="setting.line_secret"
+                id="content"
+                rows="4"
+                class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter Secret Channel Key"
+              />
+            </div>
           </div>
         </div>
 
-        <div class="flex mt-4">
-          <div class="w-72 flex text-left items-center">
-            <h4 for="title" class="text-black">Line Secret Channel Key</h4>
+        <div class="pt-8">
+          <h1>facebook bot Setting</h1>
+          <div class="flex mt-4">
+            <div class="w-72 flex text-left items-center">
+              <h4 for="title" class="text-black">Facebook Token</h4>
+            </div>
+            <div class="flex-4 w-full">
+              <input
+                v-model="setting.facebook_token"
+                id="content"
+                rows="4"
+                class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter Facebook Token"
+              />
+            </div>
           </div>
-          <div class="flex-4 w-full">
-            <input
-              v-model="setting.line_secret"
-              id="content"
-              rows="4"
-              class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              placeholder="Enter Secret Channel Key"
-            />
+
+          <div class="flex mt-4">
+            <div class="w-72 flex text-left items-center">
+              <h4 for="title" class="text-black">Password Verify</h4>
+            </div>
+            <div class="flex-4 w-full flex">
+              <input
+                v-model="setting.facebook_verify_password"
+                id="content"
+                rows="4"
+                class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Password Verify"
+              />
+              <button @click="generateFacebookPassword()" class="bg-green-600 p-4 rounded-md text-white ml-4">Generate</button>
+            </div>
           </div>
         </div>
 
@@ -91,11 +128,17 @@ function closeModal() {
   isSuccess.value = false;
 }
 
+function generateFacebookPassword() {
+  setting.value.facebook_verify_password = Math.random().toString(36).slice(-8)
+}
+
 async function handleSave() {
   if (!setting.value.id) {
     await settingStore.createSetting({
       line_key: setting.value.line_key,
       line_secret: setting.value.line_secret,
+      facebook_token: setting.value.facebook_token,
+      facebook_verify_password: setting.value.facebook_verify_password,
     })
     openModal()
   } else {
@@ -105,6 +148,8 @@ async function handleSave() {
         id: setting.value.id,
         line_key: setting.value.line_key,
         line_secret: setting.value.line_secret,
+        facebook_token: setting.value.facebook_token,
+        facebook_verify_password: setting.value.facebook_verify_password,
       })
     } catch (error) {
       console.error('Error deleting document:', error)

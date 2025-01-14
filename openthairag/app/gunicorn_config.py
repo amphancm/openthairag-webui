@@ -4,10 +4,10 @@
 bind = "0.0.0.0:5000"
 
 # Number of worker processes
-workers = 1
+workers = 4
 
 # Number of threads per worker
-threads = 1
+threads = 10
 
 # Worker class
 worker_class = "sync"

@@ -199,8 +199,7 @@ def compute_model(query,arr_history, system_prompt, temperature):
         'content': query
     })
 
-
-    chatOptions = {"selectedModel": ".", "systemPrompt": 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์\n\n'+system_prompt+'\n\n'+prompt, "temperature": float(temperature) }
+    chatOptions = {"selectedModel": ".", "systemPrompt": 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น \n\n'+system_prompt+'\n\n'+prompt, "temperature": float(temperature) if temperature != '' else 0.5 }
 
     print("prompt_chatml :",prompt_chatml)
     print("chatOptions :",chatOptions)

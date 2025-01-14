@@ -9,18 +9,19 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
       try {
         const response = await fetch('http://localhost:5500/system_prompt')
         const data = await response.json()
-        data.forEach((element: { _id: { $oid: string }; content: string; temperature: string }) => {
+        data.forEach((element: { _id: { $oid: string }; content: string; temperature: string, greeting: string }) => {
           this.systemPrompts = {
             id: element._id.$oid,
             content: element.content,
             temperature: element.temperature,
+            greeting: element.greeting,
           }
         })
       } catch (error) {
         console.error('Failed to fetch systemPrompts:', error)
       }
     },
-    async createSystemPrompt(newSystemPrompt: { content: string; temperature: string }) {
+    async createSystemPrompt(newSystemPrompt: { content: string; temperature: string, greeting: string }) {
       try {
         const response = await fetch('http://localhost:5500/system_prompt', {
           method: 'POST',
@@ -37,7 +38,7 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
         console.error('Failed to create systemPrompt:', error)
       }
     },
-    async saveSystemPrompt(newSystemPrompt: { id: string; content: string; temperature: string }) {
+    async saveSystemPrompt(newSystemPrompt: { id: string; content: string; temperature: string, greeting: string }) {
       try {
         const response = await fetch('http://localhost:5500/system_prompt', {
           method: 'PATCH',

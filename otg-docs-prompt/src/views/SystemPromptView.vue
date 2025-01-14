@@ -7,7 +7,7 @@
       <div class="overflow-x-auto w-full">
         <div class="flex mt-4">
           <div class="w-40 flex text-left items-center">
-            <h4 for="title" class="text-black">Temerature</h4>
+            <h4 for="title" class="text-black">Temperature</h4>
           </div>
           <div class="flex-4 w-full">
             <input
@@ -18,6 +18,22 @@
               rows="4"
               class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter Temperature"
+            />
+          </div>
+        </div>
+
+        <div class="flex mt-4">
+          <div class="w-40 flex text-left items-center">
+            <h4 for="title" class="text-black">Greeting</h4>
+          </div>
+          <div class="flex-4 w-full">
+            <input
+              type="text"
+              v-model="system_prompt.greeting"
+              id="content"
+              rows="4"
+              class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter Greeting Prompt"
             />
           </div>
         </div>
@@ -105,6 +121,7 @@ async function handleSave() {
     await systemPromptStore.createSystemPrompt({
       content: system_prompt.value.content,
       temperature: system_prompt.value.temperature,
+      greeting: system_prompt.value.greeting,
     })
     openModal()
   } else {
@@ -114,6 +131,7 @@ async function handleSave() {
         id: system_prompt.value.id,
         content: system_prompt.value.content,
         temperature: system_prompt.value.temperature,
+        greeting: system_prompt.value.greeting,
       })
     } catch (error) {
       console.error('Error deleting document:', error)
