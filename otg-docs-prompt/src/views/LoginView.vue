@@ -28,13 +28,13 @@
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center">
             <input
+              v-model="remember"
               type="checkbox"
               id="remember"
               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
             />
             <label for="remember" class="ml-2 block text-sm text-gray-900">Remember me</label>
           </div>
-          <a href="#" class="text-sm text-indigo-600 hover:underline">Forgot password?</a>
         </div>
         <button
           type="submit"
@@ -54,20 +54,23 @@
   
   const username = ref("");
   const password = ref("");
+  const remember = ref(false);
   const authenticationStore = useAuthenticationStore()
     
   const handleLogin = () => {
     // Add your login logic here, e.g., API calls
     authenticationStore.login({
       username: username.value,
-      password: password.value
+      password: password.value,
+      remember: remember.value
     })
 
     // router.push({ path: '/' }).catch((err) => console.error(err));
-    setTimeout(() => {
+    setTimeout(async () => {
       const token = ref(localStorage.getItem("token"));
       if (token.value) {
         // If token exists, navigate to the desired route
+        await authenticationStore.getProfile();
         router.push({ path: "/" }).catch((err) => console.error(err));
       } else {
         // If token does not exist, log an error or redirect to login

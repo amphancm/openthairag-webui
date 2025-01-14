@@ -2,11 +2,12 @@ import router from '@/router'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-const token = ref(localStorage.getItem("token"));
-
 export const useAuthenticationStore = defineStore('authenticationStore', {
+  state: () => ({
+    profile: {} as Record<string, { username:string; token:string; }>
+  }),
   actions: {
-    async login(body: { username: string, password: string }) {
+    async login(body: { username: string, password: string, remember: boolean }) {
       try {
           const response = await fetch('http://localhost:5500/login', {
             method: 'POST',
@@ -24,6 +25,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
     },
     async logout() {
       try {
+          const token = ref(localStorage.getItem("token"));
           const response = await fetch('http://localhost:5500/logout', {
             method: 'POST',
             headers:{
@@ -41,10 +43,12 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
     },
     async getProfile() {
       try {
+        const token = ref(localStorage.getItem("token"));
         const response = await fetch('http://localhost:5500/profile', {headers:{
           'Authorization' : 'Bearer '+token.value
         }})
         const res = await handleResponse(response);
+        this.profile = res
         return res
       } catch (error) {
         console.error('Failed to fetch systemPrompts:', error)

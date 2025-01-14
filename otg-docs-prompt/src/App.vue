@@ -15,9 +15,6 @@
               <div class="space-y-4 text-left ml-10">
                 <h4><RouterLink to="/docs">Documents</RouterLink></h4>
                 <h4><RouterLink to="/system_prompt">System Prompt</RouterLink></h4>
-                <!-- <h4><RouterLink to="/">Prompt Lab</RouterLink></h4> -->
-                <!-- <h4><RouterLink to="/">Chating</RouterLink></h4> -->
-                <!-- <h4><RouterLink to="/setting">Settings</RouterLink></h4> -->
                 <h4>
                   <button
                     class="w-full text-left focus:outline-none"
@@ -33,8 +30,10 @@
                   <h5>
                     <RouterLink to="/chat/line">Line</RouterLink>
                   </h5>
+                  <h5>
+                    <RouterLink to="/chat/facebook">Facebook</RouterLink>
+                  </h5>
                 </div>
-                <!-- <h4><RouterLink to="/setting">Settings</RouterLink></h4> -->
                 <h4>
                   <button
                     class="w-full text-left focus:outline-none"
@@ -55,7 +54,7 @@
             </slot>
           </div>
           <div class="flex-none px-4">
-            <div v-if="profile" class="flex">
+            <div v-if="profile != null" class="flex">
               <div class="flex-auto items-center flex justify-center">
                 <p>{{ profile.username }}</p>
               </div>
@@ -107,9 +106,11 @@ const route = useRoute();
 const isLoginPage = computed(() => route.path === '/login');
 const token = ref(localStorage.getItem("token"));
 const authentication = useAuthenticationStore()
-const profile = ref<{ username: string; token: string } | null>(null)
+// const profile = ref<{ username: string; token: string } | null>(null)
 const isIconmenuVisible = ref(false);
 const menuIcon = ref<HTMLElement | null>(null)
+
+const profile = computed(() => authentication.profile)
 
 // Sidebar submenu state
 const submenuOpen: Record<string, boolean> = reactive({
@@ -123,6 +124,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  // profile.value = null
   document.removeEventListener('click', handleClickOutside)
 })
 
@@ -141,8 +143,7 @@ function toggleSubmenu(menu: string) {
 
 async function getProfile() {
   if (token.value) {
-    const profile_data = await authentication.getProfile();
-    profile.value = profile_data;
+    await authentication.getProfile();
   } else {
     console.error("Token is missing in localStorage.");
     router.push({ path: "/login" }).catch((err) => console.error(err));
@@ -155,6 +156,7 @@ function pushRouteLogin() {
 
 async function logout(){
   isIconmenuVisible.value = false
+  // profile.value = null
   await authentication.logout()
   router.push({ path: "/login" }).catch((err) => console.error(err));
 }

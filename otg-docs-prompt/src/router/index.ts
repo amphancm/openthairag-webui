@@ -9,6 +9,7 @@ import CreateAccountView from '@/views/CreateAccountView.vue'
 import SettingView from '@/views/SettingView.vue'
 import AccountView from '@/views/AccountView.vue'
 import LineChatView from '@/views/LineChatView.vue'
+import FacebookChatView from '@/views/FacebookChatView.vue'
 import LoginView from '@/views/LoginView.vue'
 
 const router = createRouter({
@@ -63,6 +64,11 @@ const router = createRouter({
       path: '/chat/line',
       name: 'chatline',
       component: LineChatView,
+    },
+    {
+      path: '/chat/facebook',
+      name: 'chatFacebook',
+      component: FacebookChatView,
     },
     {
       path: '/setting',

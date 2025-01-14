@@ -8,6 +8,7 @@ gunicorn
 numpy
 pymongo
 openai
+requests
 line-bot-sdk==2.0.1
 dnspython==2.3.0
 openai==0.28

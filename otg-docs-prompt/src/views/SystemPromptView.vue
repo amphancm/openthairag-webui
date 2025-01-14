@@ -7,7 +7,7 @@
       <div class="overflow-x-auto w-full">
         <div class="flex mt-4">
           <div class="w-40 flex text-left items-center">
-            <h4 for="title" class="text-black">Temerature</h4>
+            <h4 for="title" class="text-black">Temperature</h4>
           </div>
           <div class="flex-4 w-full">
             <input
