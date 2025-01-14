@@ -18,6 +18,10 @@
   2. docker-compose up
   3. Goto localhost:8080 (Frontend)
   4. Goto localhost:5000 (Backend)
+
+  Default user
+  username : admin
+  password : admin
 ---------------------------------------------------------------
 # การใช้งาน Prompt Lab
   1. ให้ทำการ เข้าไปที่ Document และทำการ ใส่องค์ความรู้ในเรื่องที่จะให้ AI Scope เข้าไป ความรู้ วัดพระมหาธาตุ หรือ Kob description ที่อยากให้ AI เรียนรู้เเข้าไป พร้อมตั้งชื่อเรื่อง
