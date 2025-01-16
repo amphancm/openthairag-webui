@@ -511,7 +511,10 @@ def room_option():
         }), 201
 
     elif request.method == 'GET':
-        data = mongo.chatHistory.find()
+        username = request.args.get('account_owner')
+        data = mongo.chatHistory.find({
+            'account_owner': username
+        })
         return dumps(data), 200
 
 @app.route("/room_option/<id>", methods=['GET', 'DELETE'])
@@ -1023,7 +1026,7 @@ def fb_callback():
 
         if checkStatus and not checkStatus['chatOption']['botToggle']:
             text = message
-            logger.info(f"ping")
+            
             mongo.fbTempMessage.insert_one({
                 'message':{
                     'role': 'user',

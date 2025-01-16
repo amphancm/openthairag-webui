@@ -99,6 +99,7 @@ import { RouterLink, RouterView, useRoute } from 'vue-router'
 import router from '@/router'
 import { useAuthenticationStore } from "./stores/authentication";
 import { Icon } from "@iconify/vue/dist/iconify.js";
+import { useChatRoomStore } from "./stores/chatRooms";
 
 const route = useRoute();
 
@@ -106,7 +107,7 @@ const route = useRoute();
 const isLoginPage = computed(() => route.path === '/login');
 const token = ref(localStorage.getItem("token"));
 const authentication = useAuthenticationStore()
-// const profile = ref<{ username: string; token: string } | null>(null)
+const chatroom = useChatRoomStore()
 const isIconmenuVisible = ref(false);
 const menuIcon = ref<HTMLElement | null>(null)
 
@@ -124,7 +125,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  // profile.value = null
   document.removeEventListener('click', handleClickOutside)
 })
 
@@ -156,7 +156,7 @@ function pushRouteLogin() {
 
 async function logout(){
   isIconmenuVisible.value = false
-  // profile.value = null
+  await chatroom.resetChatRooms()
   await authentication.logout()
   router.push({ path: "/login" }).catch((err) => console.error(err));
 }

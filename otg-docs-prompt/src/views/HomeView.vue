@@ -182,7 +182,10 @@ const isAssistantTyping = ref(false)
 const isUserTyping = ref(false)
 const targetRef = ref<HTMLElement | null>(null)
 const messagesContainer = ref<HTMLElement | null>(null)
-
+let profile = {
+  username: '',
+  token: '',
+}
 const chatRoomsStore = useChatRoomStore()
 const chatRooms = computed(() => chatRoomsStore.chatRoom) // Replace `chatRoom` with your actual state variable
 
@@ -206,10 +209,10 @@ let chatRoomsList: {
 }[] = []
 
 onMounted(async () => {
-  await chatRoomsStore.fetchChatRooms()
+  profile = await authentication.getProfile();
+  await chatRoomsStore.fetchChatRooms(profile)
   await systemPromptStore.fetchSystemPrompts()
 
-  await authentication.getProfile();
   chatRoomsList = Object.values(chatRooms.value)
   selectIndexing.value = chatRoomsList.length > 0 ? chatRoomsList.length - 1 : 0;
   if (messagesContainer.value) {
@@ -323,6 +326,7 @@ function closeModalDelete() {
 async function handleConfirmSystemPrompt() {
   if (type.value == 'create') {
     await chatRoomsStore.createChatRooms({
+      account_owner: profile.username,
       chatOption: {
         name: name.value,
         temperature: temperature.value,
