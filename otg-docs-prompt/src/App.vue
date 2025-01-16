@@ -3,7 +3,7 @@
     <div v-if="isLoginPage" class="h-screen bg-gray-100 flex items-center justify-center">
       <RouterView />
     </div>
-    <div class="flex h-screen">
+    <div v-else class="flex h-screen">
       <div
         class="flex-none bg-gray-800 text-white w-[200px] items-center text-center"
       >
