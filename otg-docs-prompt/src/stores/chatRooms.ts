@@ -12,9 +12,10 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
     >,
   }),
   actions: {
-    async fetchChatRooms() {
+    async fetchChatRooms(profile: { username: string; token: string }) {
+      const username = profile.username
       try {
-        const response = await fetch('http://localhost:5500/room_option')
+        const response = await fetch('http://localhost:5500/room_option?account_owner='+username)
         const data = await response.json()
         data.forEach(
           (element: {
@@ -49,9 +50,11 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
       }
     },
     async createChatRooms(config: {
+      account_owner: string;
       chatOption: { name: string; temperature: string; systemPrompt: string }
       messages: Array<{ role: string; content: string }>
     }) {
+      console.log('account_owner :',config.account_owner)
       try {
         const response = await fetch('http://localhost:5500/room_option', {
           method: 'POST',
@@ -103,5 +106,8 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
         console.error('Failed to create ChatRooms:', error)
       }
     },
+    resetChatRooms() {
+      this.chatRoom = {}
+    }
   },
 })
