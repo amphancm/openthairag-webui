@@ -159,8 +159,6 @@ import { Icon } from '@iconify/vue'
 import { useSystemPromptStore } from '@/stores/systemPrompt'
 import { useChatLineRoomStore } from '@/stores/chatLineRoom'
 
-import socket from "@/services/socket";
-
 interface MessageData {
     message: {
         role: 'assistant' | 'user';
@@ -251,14 +249,13 @@ function closeModal() {
 
 function sendMessage() {
   if (message.value.trim()) {
-    socket.emit("chat message", message.value);
     message.value = "";
   }
 }
 
 async function fetchTempMessages() {
   try {
-    const response = await fetch('http://localhost:5500/short_polling_message');
+    const response = await fetch('https://otg-server.odoo365cloud.com/short_polling_message');
     const data = await response.json();
     if(data.message != null) {
       console.log("data : ",data)
@@ -303,7 +300,6 @@ function appendMessageToChatRoom(
 
 onUnmounted(() => {
   stopPolling();
-  socket.disconnect();
 });
 
 watch(

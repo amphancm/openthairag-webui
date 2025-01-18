@@ -7,7 +7,7 @@ export const useAccountStore = defineStore('accountStore', {
   actions: {
     async fetchAccounts() {
       try {
-        const response = await fetch('http://localhost:5500/account')
+        const response = await fetch('https://otg-server.odoo365cloud.com/account')
         const data = await response.json()
         data.forEach((element: { id: string; username: string; email: string; role: string }) => {
           this.accounts[element.id] = {
@@ -23,7 +23,7 @@ export const useAccountStore = defineStore('accountStore', {
     },
     async createAccount(newDoc: { username: string; email: string }) {
       try {
-        await fetch('http://localhost:5500/account', {
+        await fetch('https://otg-server.odoo365cloud.com/account', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newDoc),
@@ -34,7 +34,7 @@ export const useAccountStore = defineStore('accountStore', {
     },
     async saveAccount(newAcc: { id: string; username: string; email: string; role: string }) {
       try {
-        await fetch('http://localhost:5500/account', {
+        await fetch('https://otg-server.odoo365cloud.com/account', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newAcc),
@@ -51,7 +51,7 @@ export const useAccountStore = defineStore('accountStore', {
     },
     async deleteAccount(id: string) {
       try {
-        await fetch('http://localhost:5500/account/' + id, {
+        await fetch('https://otg-server.odoo365cloud.com/account/' + id, {
           method: 'DELETE',
         })
         delete this.accounts[id]

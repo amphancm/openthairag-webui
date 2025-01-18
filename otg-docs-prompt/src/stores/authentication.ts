@@ -9,7 +9,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
   actions: {
     async login(body: { username: string, password: string, remember: boolean }) {
       try {
-          const response = await fetch('http://localhost:5500/login', {
+          const response = await fetch('https://otg-server.odoo365cloud.com/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
@@ -26,7 +26,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
     async logout() {
       try {
           const token = ref(localStorage.getItem("token"));
-          const response = await fetch('http://localhost:5500/logout', {
+          const response = await fetch('https://otg-server.odoo365cloud.com/logout', {
             method: 'POST',
             headers:{
               'Authorization' : 'Bearer '+token.value
@@ -44,7 +44,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
     async getProfile() {
       try {
         const token = ref(localStorage.getItem("token"));
-        const response = await fetch('http://localhost:5500/profile', {headers:{
+        const response = await fetch('https://otg-server.odoo365cloud.com/profile', {headers:{
           'Authorization' : 'Bearer '+token.value
         }})
         const res = await handleResponse(response);

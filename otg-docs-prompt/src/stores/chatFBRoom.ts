@@ -25,7 +25,7 @@ export const useChatFBRoomStore = defineStore('ChatFBRoomStore', {
   actions: {
     async fetchChatFBRooms() {
       try {
-        const response = await fetch('http://localhost:5500/room_fb_option')
+        const response = await fetch('https://otg-server.odoo365cloud.com/room_fb_option')
         const data = await response.json()
         data.forEach(
           (element: {
@@ -66,7 +66,7 @@ export const useChatFBRoomStore = defineStore('ChatFBRoomStore', {
     },
     async fetchTempChatFBRooms() {
       try {
-        const response = await fetch('http://localhost:5500/fb_short_polling_message')
+        const response = await fetch('https://otg-server.odoo365cloud.com/fb_short_polling_message')
         const data = await response.json()
       } catch (error) {
         console.error('Failed to fetch ChatFBRooms:', error)
@@ -77,7 +77,7 @@ export const useChatFBRoomStore = defineStore('ChatFBRoomStore', {
       chatOption: { temperature: string; systemPrompt: string; botToggle: boolean; }
     }) {
       try {
-        const response = await fetch('http://localhost:5500/room_fb_option', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/room_fb_option', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config),
@@ -88,7 +88,7 @@ export const useChatFBRoomStore = defineStore('ChatFBRoomStore', {
     },
     async deleteChatFBRooms(id: string) {
       try {
-        await fetch('http://localhost:5500/room_fb_option/' + id, {
+        await fetch('https://otg-server.odoo365cloud.com/room_fb_option/' + id, {
           method: 'DELETE',
         })
         delete this.chatFBRoom[id]
@@ -98,7 +98,7 @@ export const useChatFBRoomStore = defineStore('ChatFBRoomStore', {
     },
     async deleteTempChatFBRooms(send_id: string) {
       try {
-        await fetch('http://localhost:5500/reset_fb_tempMessage/', {
+        await fetch('https://otg-server.odoo365cloud.com/reset_fb_tempMessage/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(send_id),
@@ -118,7 +118,7 @@ export const useChatFBRoomStore = defineStore('ChatFBRoomStore', {
           role: 'assistant',
           content: message.message,
         })
-        const response = await fetch('http://localhost:5500/sending_fb_assistant', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/sending_fb_assistant', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(message),

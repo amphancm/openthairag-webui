@@ -158,7 +158,6 @@ import Modal from '../components/CustomModal.vue'
 import { Icon } from '@iconify/vue'
 import { useSystemPromptStore } from '@/stores/systemPrompt'
 
-import socket from "@/services/socket";
 import { useChatFBRoomStore } from '@/stores/chatFBRoom'
 
 interface MessageData {
@@ -248,16 +247,9 @@ function closeModal() {
   isSuccess.value = false;
 }
 
-function sendMessage() {
-  if (message.value.trim()) {
-    socket.emit("chat message", message.value);
-    message.value = "";
-  }
-}
-
 async function fetchTempMessages() {
   try {
-    const response = await fetch('http://localhost:5500/fb_short_polling_message');
+    const response = await fetch('https://otg-server.odoo365cloud.com/fb_short_polling_message');
     const data = await response.json();
     if(data.message != null) {
       console.log("data : ",data)
@@ -302,7 +294,6 @@ function appendMessageToChatRoom(
 
 onUnmounted(() => {
   stopPolling();
-  socket.disconnect();
 });
 
 watch(

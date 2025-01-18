@@ -15,7 +15,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
     async fetchChatRooms(profile: { username: string; token: string }) {
       const username = profile.username
       try {
-        const response = await fetch('http://localhost:5500/room_option?account_owner='+username)
+        const response = await fetch('https://otg-server.odoo365cloud.com/room_option?account_owner='+username)
         const data = await response.json()
         data.forEach(
           (element: {
@@ -39,7 +39,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
       chatOption: { name: string; temperature: string; systemPrompt: string }
     }) {
       try {
-        const response = await fetch('http://localhost:5500/room_option', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/room_option', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config),
@@ -56,7 +56,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
     }) {
       console.log('account_owner :',config.account_owner)
       try {
-        const response = await fetch('http://localhost:5500/room_option', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/room_option', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config),
@@ -73,7 +73,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
     },
     async deleteChatRooms(id: string) {
       try {
-        await fetch('http://localhost:5500/room_option/' + id, {
+        await fetch('https://otg-server.odoo365cloud.com/room_option/' + id, {
           method: 'DELETE',
         })
         delete this.chatRoom[id]
@@ -92,7 +92,7 @@ export const useChatRoomStore = defineStore('ChatRoomStore', {
           role: 'user',
           content: message.message,
         })
-        const response = await fetch('http://localhost:5500/chat_history', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/chat_history', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(message),

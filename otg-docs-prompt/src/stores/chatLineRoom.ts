@@ -26,7 +26,7 @@ export const useChatLineRoomStore = defineStore('ChatLineRoomStore', {
   actions: {
     async fetchChatLineRooms() {
       try {
-        const response = await fetch('http://localhost:5500/room_line_option')
+        const response = await fetch('https://otg-server.odoo365cloud.com/room_line_option')
         const data = await response.json()
         data.forEach(
           (element: {
@@ -68,7 +68,7 @@ export const useChatLineRoomStore = defineStore('ChatLineRoomStore', {
     },
     async fetchTempChatLineRooms() {
       try {
-        const response = await fetch('http://localhost:5500/short_polling_message')
+        const response = await fetch('https://otg-server.odoo365cloud.com/short_polling_message')
         const data = await response.json()
       } catch (error) {
         console.error('Failed to fetch ChatLineRooms:', error)
@@ -79,7 +79,7 @@ export const useChatLineRoomStore = defineStore('ChatLineRoomStore', {
       chatOption: { temperature: string; systemPrompt: string; botToggle: boolean; }
     }) {
       try {
-        const response = await fetch('http://localhost:5500/room_line_option', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/room_line_option', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config),
@@ -90,7 +90,7 @@ export const useChatLineRoomStore = defineStore('ChatLineRoomStore', {
     },
     async deleteChatLineRooms(id: string) {
       try {
-        await fetch('http://localhost:5500/room_line_option/' + id, {
+        await fetch('https://otg-server.odoo365cloud.com/room_line_option/' + id, {
           method: 'DELETE',
         })
         delete this.chatLineRoom[id]
@@ -109,7 +109,7 @@ export const useChatLineRoomStore = defineStore('ChatLineRoomStore', {
           role: 'assistant',
           content: message.message,
         })
-        const response = await fetch('http://localhost:5500/sending_line_assistant', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/sending_line_assistant', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(message),

@@ -7,7 +7,7 @@ export const useDocumentStore = defineStore('documentStore', {
   actions: {
     async fetchDocuments() {
       try {
-        const response = await fetch('http://localhost:5500/document')
+        const response = await fetch('https://otg-server.odoo365cloud.com/document')
         const data = await response.json()
         data.forEach((element: { id: string; title: string; content: string; doc_id: string }) => {
           this.documents[element.id] = {
@@ -23,7 +23,7 @@ export const useDocumentStore = defineStore('documentStore', {
     },
     async createDocument(newDoc: { title: string; content: string }) {
       try {
-        await fetch('http://localhost:5500/document', {
+        await fetch('https://otg-server.odoo365cloud.com/document', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newDoc),
@@ -34,7 +34,7 @@ export const useDocumentStore = defineStore('documentStore', {
     },
     async saveDocument(newDoc: { id: string; title: string; content: string; doc_id: string }) {
       try {
-        const response = await fetch('http://localhost:5500/document', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/document', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newDoc),
@@ -47,7 +47,7 @@ export const useDocumentStore = defineStore('documentStore', {
     },
     async deleteDocument(id: string) {
       try {
-        await fetch('http://localhost:5500/document/' + id, {
+        await fetch('https://otg-server.odoo365cloud.com/document/' + id, {
           method: 'DELETE',
         })
         delete this.documents[id]

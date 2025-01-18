@@ -7,7 +7,7 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
   actions: {
     async fetchSystemPrompts() {
       try {
-        const response = await fetch('http://localhost:5500/system_prompt')
+        const response = await fetch('https://otg-server.odoo365cloud.com/system_prompt')
         const data = await response.json()
         data.forEach((element: { _id: { $oid: string }; content: string; temperature: string, greeting: string }) => {
           this.systemPrompts = {
@@ -23,7 +23,7 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
     },
     async createSystemPrompt(newSystemPrompt: { content: string; temperature: string, greeting: string }) {
       try {
-        const response = await fetch('http://localhost:5500/system_prompt', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/system_prompt', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSystemPrompt),
@@ -40,7 +40,7 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
     },
     async saveSystemPrompt(newSystemPrompt: { id: string; content: string; temperature: string, greeting: string }) {
       try {
-        const response = await fetch('http://localhost:5500/system_prompt', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/system_prompt', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSystemPrompt),

@@ -7,7 +7,7 @@ export const useSettingStore = defineStore('SettingStore', {
   actions: {
     async fetchSettings() {
       try {
-        const response = await fetch('http://localhost:5500/setting')
+        const response = await fetch('https://otg-server.odoo365cloud.com/setting')
         const data = await response.json()
         data.forEach(
           (element: { _id: { $oid: string }; line_key: string; line_secret: string; facebook_token: string; facebook_verify_password:string; }) => {
@@ -31,7 +31,7 @@ export const useSettingStore = defineStore('SettingStore', {
       facebook_verify_password: string; 
     }) {
       try {
-        const response = await fetch('http://localhost:5500/setting', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/setting', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSetting),
@@ -56,7 +56,7 @@ export const useSettingStore = defineStore('SettingStore', {
       facebook_verify_password: string; 
     }) {
       try {
-        const response = await fetch('http://localhost:5500/setting', {
+        const response = await fetch('https://otg-server.odoo365cloud.com/setting', {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSetting),
