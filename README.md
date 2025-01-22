@@ -17,7 +17,7 @@
   1. docker-compose build
   2. docker-compose up
   3. Goto localhost:8080 (Frontend)
-  4. Goto localhost:5000 (Backend)
+  4. Goto localhost:5500 (Backend)
 
   Default user
   username : admin
