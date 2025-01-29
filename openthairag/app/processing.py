@@ -12,6 +12,7 @@ import logging
 from db import Connection
 from bson.json_util import dumps
 import openai
+import json
 
 MILVUS_HOST = os.environ.get('MILVUS_HOST', 'milvus')
 MILVUS_PORT = os.environ.get('MILVUS_PORT', '19530')
@@ -187,6 +188,9 @@ def compute_model(query,arr_history, system_prompt, temperature):
     top_documents = [retrieved_documents[i] for i, _ in ranked_indices[:3]]
 
     # system_prompt = os.environ.get('SYSTEM_PROMPT', 'คุณคือ OpenThaiGPT พัฒนาโดยสมาคมผู้ประกอบการปัญญาประดิษฐ์ประเทศไทย (AIEAT)')
+
+    # <|im_start|>system\nคุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์<|im_end|>
+
     prompt = f"จากเอกสารต่อไปนี้\n\n"
     prompt += "\n\n".join([doc.get('text') for doc in top_documents])
 
@@ -199,37 +203,64 @@ def compute_model(query,arr_history, system_prompt, temperature):
         'content': query
     })
 
-    chatOptions = {"selectedModel": ".", "systemPrompt": 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น \n\n'+system_prompt+'\n\n'+prompt, "temperature": float(temperature) if temperature != '' else 0.5 }
-
-    print("prompt_chatml :",prompt_chatml)
-    print("chatOptions :",chatOptions)
+    # chatOptions = {"selectedModel": ".", "systemPrompt": 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น \n\n'+system_prompt+'\n\n'+prompt, "temperature": float(temperature) if temperature != '' else 0.5 }
+    historyPrompt = ""
+    promptBody = "<|im_start|>system\nคุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น"+system_prompt+"\n\n"+prompt+"<|im_end|>\n"
+    # "<|im_start|>user\n"+query+"<|im_end|>\n<|im_start|>assistant\n"
+    for dat in arr_history:
+        historyPrompt += "<|im_start|>"+dat['role']+"\n"+dat['content']+"<|im_end|>"
+    
+    promptBody = historyPrompt + promptBody
+    promptBody += "<|im_start|>user\n"+query+"<|im_end|>\n<|im_start|>assistant\n"
+    print("prompt_chatml :",promptBody)
+    # print("chatOptions :",chatOptions)
     
     response = requests.post(
-        'https://demo72b.aieat.or.th/api/chat',
+        'https://api.aieat.or.th/v1/completions',
         headers={
             'accept': '*/*',
             'accept-language': 'en-US,en;q=0.9',
             'content-type': 'application/json',
-            'dnt': '1',
-            'origin': 'https://demo72b.aieat.or.th',
-            'priority': 'u=1, i',
-            'referer': 'https://demo72b.aieat.or.th/',
-            'sec-ch-ua': '"Chromium";v="131", "Not_A Brand";v="24"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"macOS"',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-origin',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
         },
         json={
-            "messages": prompt_chatml,
-            "chatOptions": chatOptions
+            "model": ".",
+            "max_tokens": 512,
+            "temperature": float(temperature) if temperature != '' else 0.5,
+            "top_p": 0.8,
+            "top_k": 40,
+            # "messages": prompt_chatml,
+            # "chatOptions": chatOptions,
+            "prompt": promptBody,
+            "stop": ["<|im_end|>"]
         }
     )
+    # response = requests.post(
+    #     'https://demo72b.aieat.or.th/api/chat',
+    #     headers={
+    #         'accept': '*/*',
+    #         'accept-language': 'en-US,en;q=0.9',
+    #         'content-type': 'application/json',
+    #         'dnt': '1',
+    #         'origin': 'https://demo72b.aieat.or.th',
+    #         'priority': 'u=1, i',
+    #         'referer': 'https://demo72b.aieat.or.th/',
+    #         'sec-ch-ua': '"Chromium";v="131", "Not_A Brand";v="24"',
+    #         'sec-ch-ua-mobile': '?0',
+    #         'sec-ch-ua-platform': '"macOS"',
+    #         'sec-fetch-dest': 'empty',
+    #         'sec-fetch-mode': 'cors',
+    #         'sec-fetch-site': 'same-origin',
+    #         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+    #     },
+    #     json={
+    #         "messages": prompt_chatml,
+    #         "chatOptions": chatOptions
+    #     }
+    # )
 
-    print("response :",convertTextFromRes(response.text))
-    return convertTextFromRes(response.text)
+    print("response :",response.text)
+    print("response :",response.text)
+    return json.loads(response.text)
 
 def convertTextFromRes(res):
     result = []

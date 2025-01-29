@@ -558,9 +558,11 @@ def system_history():
             data['temperature'] if 'temperature' in data else 0.5
         )
 
+        print('=============>>>>>> : '+otg['choices'][0]['text'])
+
         message = {
             'role': 'assistant',
-            'content': otg,
+            'content': otg['choices'][0]['text'],
         }
 
         mongo.chatHistory.update_one({
@@ -688,7 +690,7 @@ def message_submit_initial():
     message = {
         'type': 'assistant',
         'room': id,
-        'text': otg,
+        'text': otg['choices'][0]['text'],
         'timestamp': datetime.datetime.now()
     }
 
@@ -747,10 +749,10 @@ def callback():
         data[0]['temperature']
     )
 
-    print("otg : ",otg)
+    print("otg : ",otg['choices'][0]['text'])
 
     return [{
-        "content": otg,
+        "content": otg['choices'][0]['text'],
         "role": 'assistant'
     }], 200
 
@@ -950,7 +952,7 @@ def line_callback():
                         '$each': [{
                             'role': 'assistant',
                             'user': id,
-                            'content': otg.replace("\\n", "\n"),
+                            'content': otg['choices'][0]['text'].replace("\\n", "\n"),
                             'timestamp': datetime.now()
                         }]
                     }
@@ -961,12 +963,12 @@ def line_callback():
                 'message':{
                     'role': 'assistant',
                     'user': 0,
-                    'content': otg.replace("\\n", "\n"),
+                    'content': otg['choices'][0]['text'].replace("\\n", "\n"),
                     'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 },
                 'line_ids':disname.user_id
             })
-            text_message = TextSendMessage(text=otg.replace("\\n", "\n"))
+            text_message = TextSendMessage(text=otg['choices'][0]['text'].replace("\\n", "\n"))
             line_bot_api.reply_message(reply_token, text_message)
     
     return 'OK'
@@ -1151,7 +1153,7 @@ def fb_callback():
                         '$each': [{
                             'role': 'assistant',
                             'user': sender_id,
-                            'content': otg.replace("\\n", "\n"),
+                            'content': otg['choices'][0]['text'].replace("\\n", "\n"),
                             'timestamp': datetime.now()
                         }]
                     }
@@ -1162,7 +1164,7 @@ def fb_callback():
                 'message':{
                     'role': 'assistant',
                     'user': 0,
-                    'content': otg.replace("\\n", "\n"),
+                    'content': otg['choices'][0]['text'].replace("\\n", "\n"),
                     'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 },
                 'fb_ids':sender_id
@@ -1173,7 +1175,7 @@ def fb_callback():
                     "id": sender_id
                 },
                 "message": {
-                    "text": otg.replace("\\n", "\n")
+                    "text": otg['choices'][0]['text'].replace("\\n", "\n")
                 }
             }
             response = requests.post(API, json=request_body).json()
