@@ -50,34 +50,39 @@
 <script lang="ts" setup>
   import router from "@/router";
   import { useAuthenticationStore } from "@/stores/authentication";
-  import { ref } from "vue";
+  import { onMounted, ref } from "vue";
   
   const username = ref("");
   const password = ref("");
   const remember = ref(false);
   const authenticationStore = useAuthenticationStore()
     
-  const handleLogin = () => {
-    // Add your login logic here, e.g., API calls
-    authenticationStore.login({
+  onMounted(() => {
+    const token = ref(localStorage.getItem("token"));
+    if (token.value) {
+      router.push({ path: "/" }).catch((err) => console.error(err));
+    }
+  });
+  const handleLogin = async () => {
+    localStorage.removeItem("token")
+    await authenticationStore.login({
       username: username.value,
       password: password.value,
       remember: remember.value
     })
 
-    // router.push({ path: '/' }).catch((err) => console.error(err));
-    setTimeout(async () => {
-      const token = ref(localStorage.getItem("token"));
-      if (token.value) {
-        // If token exists, navigate to the desired route
-        await authenticationStore.getProfile();
-        router.push({ path: "/" }).catch((err) => console.error(err));
-      } else {
-        // If token does not exist, log an error or redirect to login
-        console.error("Token is missing in localStorage.");
-        router.push({ path: "/login" }).catch((err) => console.error(err));
-      }
-    }, 1000); // A
+    const token = ref(localStorage.getItem("token"));
+    console.log(token.value);
+    if (token.value) {
+      await authenticationStore.getProfile();
+      location.reload();
+      // 
+      
+    } else {
+      // If token does not exist, log an error or redirect to login
+      console.error("Token is missing in localStorage.");
+      router.push({ path: "/login" }).catch((err) => console.error(err));
+    }
   };
 </script>
 

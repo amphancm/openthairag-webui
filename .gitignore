@@ -2,7 +2,8 @@
 .venv/***
 .env/***
 db/***
-*/__pycache__/***
+**/__pycache__/***
 env/bin/*
 env/*
 openthairag/app/__pycache__/***
+openthairag/app/uploads/*

@@ -1,7 +1,10 @@
 <template>
   <div class="h-full flex flex-col p-4">
-    <div class="bg-slate-500 h-12 w-full flex items-center">
+    <div class="bg-slate-500 h-12 w-full flex items-center justify-between">
       <h3>Edit Accounts</h3>
+      <div class="float-end mt-4">
+          <button class="bg-slate-600 p-2 rounded-md text-white" @click="isModalOpen = true">Change Password</button>
+        </div>
     </div>
     <div class="flex parent overflow-y-auto mt-4">
       <div class="overflow-x-auto w-full">
@@ -11,7 +14,7 @@
           </div>
           <div class="flex-4 w-full">
             <input
-              v-model="newAcc.username"
+              v-model="account.username"
               type="text"
               id="username"
               class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -26,7 +29,7 @@
           </div>
           <div class="flex-4 w-full">
             <input
-              v-model="newAcc.email"
+              v-model="account.email"
               type="text"
               id="email"
               class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -41,7 +44,7 @@
           </div>
           <div class="flex-4 w-full">
             <select
-              v-model="newAcc.role"
+              v-model="account.role"
               id="role"
               class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             >
@@ -63,35 +66,104 @@
     >
       <div class="loading">Loading...</div>
     </div>
+
+    <Modal
+      :isOpen="isModalOpen"
+      title="Change Password"
+      @close="isModalOpen = false"
+      :isAlert="true"
+      @confirm="chagePassword"
+    >
+      <template #body>
+        <!-- <p>Are you sure?</p> -->
+         <div class="mb-4">
+          <div class="w-40 flex text-left py-2">
+            <h4 for="password" class="text-black">Password</h4>
+          </div>
+          <div class=" w-full mb-4">
+            <input
+              v-model="password"
+              type="password"
+              id="password"
+              class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter password"
+            />
+          </div>
+          <div class=" w-full">
+            <input
+              v-model="verifyPassword"
+              type="password"
+              id="password"
+              class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter verify password"
+            />
+          </div>
+        </div>
+      </template>
+    </Modal>
+
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useAccountStore } from '@/stores/accounts'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import router from '@/router'
+import Modal from '../components/CustomModal.vue'
 
 const route = useRoute()
-const id = route.params.id
+const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 
 const accountStore = useAccountStore()
 const accounts = computed(() => accountStore.accounts)
-const account = computed(() => accounts.value[id as string])
+const account = ref<{
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+}>({
+  id: '',
+  username: '',
+  email: '',
+  role: '',
+})
+
+
+const password = ref('')
+const verifyPassword = ref('')
+
 const isLoading = ref(false)
+const isModalOpen = ref(false)
 // Form data
-const newAcc = ref({
-  id: account.value.id,
-  username: account.value.username,
-  email: account.value.email,
-  role: account.value.role,
+
+onMounted(async () => {
+  account.value = await accountStore.fetchDetailAccounts(id)
 })
 
 // Function to create a new account
 async function handleSave() {
   isLoading.value = true
   try {
-    await accountStore.saveAccount(newAcc.value)
+    await accountStore.saveAccount(account.value)
+  } catch (error) {
+    console.error('Error deleting account:', error)
+  } finally {
+    isLoading.value = false
+  }
+  // Clear form after creation
+  router.push('/settings/account')
+}
+
+async function chagePassword() {
+  isLoading.value = true
+  try {
+    if(password.value !== verifyPassword.value){
+      alert('Password not match')
+      return
+    }
+    await accountStore.changePasswordAccount(password.value, id)
   } catch (error) {
     console.error('Error deleting account:', error)
   } finally {

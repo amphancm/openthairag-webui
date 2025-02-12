@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia'
+import { CONFIG } from '@/config'
+import router from '@/router';
+const token = localStorage.getItem("token");
 
 export const useSystemPromptStore = defineStore('systemPromptStore', {
   state: () => ({
@@ -7,27 +10,47 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
   actions: {
     async fetchSystemPrompts() {
       try {
-        const response = await fetch('https://otg-server.odoo365cloud.com/system_prompt')
-        const data = await response.json()
-        data.forEach((element: { _id: { $oid: string }; content: string; temperature: string, greeting: string }) => {
-          this.systemPrompts = {
-            id: element._id.$oid,
-            content: element.content,
-            temperature: element.temperature,
-            greeting: element.greeting,
+        const response = await fetch(`${CONFIG.API_BASE_URL}/setting/system_prompt`,{
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization' : 'Bearer '+token
+            },
           }
-        })
+        )
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          router.push({ path: "/login" }).catch((err) => console.error(err));
+          return;
+        }
+        const data = await response.json()
+        this.systemPrompts = {
+          id: data._id.$oid,
+          content: data.content,
+          temperature: data.temperature,
+          greeting: data.greeting,
+        }
       } catch (error) {
         console.error('Failed to fetch systemPrompts:', error)
       }
     },
-    async createSystemPrompt(newSystemPrompt: { content: string; temperature: string, greeting: string }) {
+    async createSystemPrompt(newSystemPrompt: { 
+      content: string; 
+      temperature: string 
+    }) {
       try {
-        const response = await fetch('https://otg-server.odoo365cloud.com/system_prompt', {
+        const response = await fetch(`${CONFIG.API_BASE_URL}/setting/system_prompt`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization' : 'Bearer '+token
+          },
           body: JSON.stringify(newSystemPrompt),
         })
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          router.push({ path: "/login" }).catch((err) => console.error(err));
+          return;
+        }
         const data = await response.json()
         this.systemPrompts = {
           id: data.id,
@@ -38,13 +61,25 @@ export const useSystemPromptStore = defineStore('systemPromptStore', {
         console.error('Failed to create systemPrompt:', error)
       }
     },
-    async saveSystemPrompt(newSystemPrompt: { id: string; content: string; temperature: string, greeting: string }) {
+    async saveSystemPrompt(newSystemPrompt: { 
+      id: string; 
+      content: string; 
+      temperature: string 
+    }) {
       try {
-        const response = await fetch('https://otg-server.odoo365cloud.com/system_prompt', {
+        const response = await fetch(`${CONFIG.API_BASE_URL}/setting/system_prompt`, {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization' : 'Bearer '+token
+          },
           body: JSON.stringify(newSystemPrompt),
         })
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          router.push({ path: "/login" }).catch((err) => console.error(err));
+          return;
+        }
       } catch (error) {
         console.error('Failed to create systemPrompt:', error)
       }

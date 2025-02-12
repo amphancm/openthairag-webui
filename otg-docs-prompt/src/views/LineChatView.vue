@@ -66,13 +66,21 @@
                 :key="index"
                 :class="message.role"
               >
-                <p
-                  class="py-1"
-                  v-for="(messager, index) in message.content.split('\\n')"
-                  :key="index"
+                <div
+                  v-if="message.type == 'text'"
+                  class="py-1" 
                 >
-                  {{ messager }}
-                </p>
+                  <p v-for="(messager, index) in message.content.split('\n')"
+                  :key="index" class="text-black" >
+                    {{ messager }}
+                  </p>
+                </div>
+                <img
+                  v-else
+                  :src="message.content"
+                  alt="image"
+                  class="w-40 h-40 object-cover rounded-md"
+                />
               </div>
             </div>
             <div v-if="isAssistantTyping" class="assistant">
@@ -158,6 +166,7 @@ import Modal from '../components/CustomModal.vue'
 import { Icon } from '@iconify/vue'
 import { useSystemPromptStore } from '@/stores/systemPrompt'
 import { useChatLineRoomStore } from '@/stores/chatLineRoom'
+import { CONFIG } from '@/config'
 
 interface MessageData {
     message: {
@@ -221,7 +230,7 @@ let chatRoomsList: {
     greeting: string; 
     botToggle: boolean;
   }
-  messages: Array<{ role: string; content: string }>
+  messages: Array<{ type: string; role: string; content: string }>
   userId: string
 }[] = []
 
@@ -230,6 +239,8 @@ onMounted(async () => {
   await systemPromptStore.fetchSystemPrompts()
   chatRoomsList = Object.values(chatRooms.value)
   selectIndexing.value = chatRoomsList.length > 0 ? chatRoomsList.length - 1 : 0;
+
+  await chatLineRoomStore.deleteTempLineRooms(chatRoomsList[selectIndexing.value].sender.userId);
   isOn.value = chatRoomsList[selectIndexing.value].chatOption.botToggle
 
   nextTick(() => {
@@ -255,7 +266,7 @@ function sendMessage() {
 
 async function fetchTempMessages() {
   try {
-    const response = await fetch('https://otg-server.odoo365cloud.com/short_polling_message');
+    const response = await fetch(`${CONFIG.API_BASE_URL}/chat/short_polling_message`);
     const data = await response.json();
     if(data.message != null) {
       console.log("data : ",data)
@@ -284,10 +295,23 @@ function appendMessageToChatRoom(
   );
 
   if (index !== -1) {
-    chatRoomsList[index].messages.push({
-      role: message_obj.message.role, // Change role as needed
-      content: message_obj.message.content,
-    });
+    const parts = processText(message_obj.message.content)
+    for (const part of parts) {
+      if(isValidImageUrl(part)) {
+        chatRoomsList[index].messages.push({
+          type: 'image',
+          role: message_obj.message.role,
+          content: part,
+        })
+      } else if(part != '-' && part != ',' && part != '' && part.length > 1) {
+        chatRoomsList[index].messages.push({
+          type: 'text',
+          role: message_obj.message.role,
+          content: part,
+        })
+      }
+    }
+
     nextTick(() => {
       if (messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
@@ -296,6 +320,41 @@ function appendMessageToChatRoom(
   } else {
     console.warn(`No chat room found for line_ids: ${message_obj.line_ids}`);
   }
+}
+
+function processText(input: string) {
+  const regex = /!?\[.*?\]\((.*?)\)/g;
+  const parts: string[] = [];
+
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(input)) !== null) {
+    // Add the part of the text before the current match
+    if (lastIndex !== match.index) {
+      parts.push(input.slice(lastIndex, match.index).trim());
+    }
+    // Add the matched image markdown
+    if (match[0].startsWith('!')) {
+      parts.push(match[1]);
+    } else {
+      parts.push(match[0].trim());
+    }
+    
+    lastIndex = regex.lastIndex;
+  }
+
+  // Add the remaining text after the last match
+  if (lastIndex < input.length) {
+    parts.push(input.slice(lastIndex).trim());
+  }
+
+  return parts;
+}
+
+function isValidImageUrl(url: string): boolean {
+  const regex = /^http.*\.(jpg|png)$/;
+  return regex.test(url);
 }
 
 onUnmounted(() => {
@@ -372,8 +431,9 @@ async function handleSubmitMessage() {
   }
 }
 
-function selectRoom(index: number) {
+async function selectRoom(index: number) {
   selectIndexing.value = index
+  await chatLineRoomStore.deleteTempLineRooms(chatRoomsList[selectIndexing.value].sender.userId);
 }
 
 function toggleSubmenu() {

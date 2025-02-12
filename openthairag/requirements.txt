@@ -16,3 +16,5 @@ flask_swagger_ui
 flask-jwt-extended
 pyjwt<2.10
 python-socketio[client]
+timezonefinder==6.5.8
+geopy
