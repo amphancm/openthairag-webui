@@ -12,6 +12,10 @@
   - ระบบทดสอบ Prompt ในรูป แปป chat ที่สามารถ แก้ไข system Prompt และ Temperature ได้
   - ระบบ settting ที่สามารถเชื่อมต่อกับ line ได้ทันที อ่านได้ที่หัวข้อ #Line ChatBot
   - ระบบ settting ที่สามารถเชื่อมต่อกับ Facebook ได้ทันที อ่านได้ที่หัวข้อ #Facebook ChatBot
+  - สามารถต่อกับ Ollama ได้ผ่าน port-forwarding
+  - สร้าง Product และ inser รูปภาพที่ต้องการให้ AI เรียกใช้งานเพื่อนสืบค้นข้อมูลได้
+  - รับ feedback จากลูกค้าได้
+  - สร้่าง AI Programable (AI Agent) ได้เอง ผ่าน Tool calling 
 ---------------------------------------------------------------
 # วิธีการติดตั้ง
   1. docker-compose build
