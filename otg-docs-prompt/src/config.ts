@@ -3,10 +3,10 @@ export const ENV = {
       API_BASE_URL: "http://localhost:5500",
     },
     staging: {
-      API_BASE_URL: "https://staging.example.com",
+      API_BASE_URL: "http://localhost:5500",
     },
     production: {
-      API_BASE_URL: "https://api.example.com",
+      API_BASE_URL: "http://localhost:5500",
     },
   };
   
