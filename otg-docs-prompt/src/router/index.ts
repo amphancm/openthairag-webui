@@ -11,6 +11,11 @@ import AccountView from '@/views/AccountView.vue'
 import LineChatView from '@/views/LineChatView.vue'
 import FacebookChatView from '@/views/FacebookChatView.vue'
 import LoginView from '@/views/LoginView.vue'
+import ProductView from '@/views/ProductView.vue'
+import IssueView from '@/views/IssueView.vue'
+import CreateProductView from '@/views/CreateProductView.vue'
+import EditProductView from '@/views/EditProductView.vue'
+import EditIssueView from '@/views/EditIssueView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,14 +31,44 @@ const router = createRouter({
       component: DocsView,
     },
     {
+      path: '/products',
+      name: 'products',
+      component: ProductView,
+    },
+    {
+      path: '/issues',
+      name: 'issues',
+      component: IssueView,
+    },
+    {
       path: '/system_prompt',
       name: 'system_prompt',
       component: SystemPromptView,
     },
     {
+      path: '/products/:id',
+      name: 'editing-product',
+      component: EditProductView,
+    },
+    {
+      path: '/issues/:id',
+      name: 'editing-issue',
+      component: EditIssueView,
+    },
+    {
+      path: '/products/create',
+      name: 'create-product',
+      component: CreateProductView,
+    },
+    {
       path: '/docs/:id',
       name: 'editing-docs',
       component: EditDocsView,
+    },
+    {
+      path: '/docs/:id',
+      name: 'editing-docs',
+      component: EditIssueView,
     },
     {
       path: '/docs/create',

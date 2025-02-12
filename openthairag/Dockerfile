@@ -32,4 +32,4 @@ ENV LOG_LEVEL=INFO
 
 # Run web.py using gunicorn when the container launches
 # CMD ["python","web.py"]
-CMD ["gunicorn", "-c", "gunicorn_config.py", "web:app"]
+CMD ["gunicorn", "-c", "gunicorn_config.py", "-w 4", "main:app"]

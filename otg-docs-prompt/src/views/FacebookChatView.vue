@@ -66,13 +66,21 @@
                 :key="index"
                 :class="message.role"
               >
-                <p
-                  class="py-1"
-                  v-for="(messager, index) in message.content.split('\\n')"
-                  :key="index"
+                <div
+                  v-if="message.type == 'text'"
+                  class="py-1" 
                 >
-                  {{ messager }}
-                </p>
+                  <p v-for="(messager, index) in message.content.split('\n')"
+                  :key="index" class="text-black" >
+                    {{ messager }}
+                  </p>
+                </div>
+                <img
+                  v-else
+                  :src="message.content"
+                  alt="image"
+                  class="w-40 h-40 object-cover rounded-md"
+                />
               </div>
             </div>
             <div v-if="isAssistantTyping" class="assistant">
@@ -158,8 +166,8 @@ import Modal from '../components/CustomModal.vue'
 import { Icon } from '@iconify/vue'
 import { useSystemPromptStore } from '@/stores/systemPrompt'
 
-import socket from "@/services/socket";
 import { useChatFBRoomStore } from '@/stores/chatFBRoom'
+import { CONFIG } from '@/config'
 
 interface MessageData {
     message: {
@@ -222,7 +230,7 @@ let chatRoomsList: {
     greeting: string; 
     botToggle: boolean;
   }
-  messages: Array<{ role: string; content: string }>
+  messages: Array<{ type: string; role: string; content: string }>
   userId: string
 }[] = []
 
@@ -230,14 +238,17 @@ onMounted(async () => {
   await chatFBRoomStore.fetchChatFBRooms();
   await systemPromptStore.fetchSystemPrompts()
   chatRoomsList = Object.values(chatRooms.value)
+
   selectIndexing.value = chatRoomsList.length > 0 ? chatRoomsList.length - 1 : 0;
+  await chatFBRoomStore.deleteTempChatFBRooms(chatRoomsList[selectIndexing.value].sender.userId);
+
   isOn.value = chatRoomsList[selectIndexing.value].chatOption.botToggle 
 
   nextTick(() => {
-        if (messagesContainer.value) {
-          messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-        }
-      })
+    if (messagesContainer.value) {
+      messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+    }
+  })
   startPolling(1000);
 })
 
@@ -248,16 +259,9 @@ function closeModal() {
   isSuccess.value = false;
 }
 
-function sendMessage() {
-  if (message.value.trim()) {
-    socket.emit("chat message", message.value);
-    message.value = "";
-  }
-}
-
 async function fetchTempMessages() {
   try {
-    const response = await fetch('http://localhost:5500/fb_short_polling_message');
+    const response = await fetch(`${CONFIG.API_BASE_URL}/chat/fb_short_polling_message`);
     const data = await response.json();
     if(data.message != null) {
       console.log("data : ",data)
@@ -286,10 +290,24 @@ function appendMessageToChatRoom(
   );
 
   if (index !== -1) {
-    chatRoomsList[index].messages.push({
-      role: message_obj.message.role, // Change role as needed
-      content: message_obj.message.content,
-    });
+
+    const parts = processText(message_obj.message.content)
+    for (const part of parts) {
+      if(isValidImageUrl(part)) {
+        chatRoomsList[index].messages.push({
+          type: 'image',
+          role: message_obj.message.role,
+          content: part,
+        })
+      } else if(part != '-' && part != ',' && part != '' && part.length > 1) {
+        chatRoomsList[index].messages.push({
+          type: 'text',
+          role: message_obj.message.role,
+          content: part,
+        })
+      }
+    }
+
     nextTick(() => {
       if (messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
@@ -300,9 +318,41 @@ function appendMessageToChatRoom(
   }
 }
 
+function processText(input: string) {
+  const regex = /!?\[.*?\]\((.*?)\)/g;
+  const parts: string[] = [];
+
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(input)) !== null) {
+    if (lastIndex !== match.index) {
+      parts.push(input.slice(lastIndex, match.index).trim());
+    }
+    if (match[0].startsWith('!')) {
+      parts.push(match[1]);
+    } else {
+      parts.push(match[0].trim());
+    }
+    
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < input.length) {
+    parts.push(input.slice(lastIndex).trim());
+  }
+
+  return parts;
+}
+
+function isValidImageUrl(url: string): boolean {
+  const regex = /^http.*\.(jpg|png)$/;
+  return regex.test(url);
+}
+
+
 onUnmounted(() => {
   stopPolling();
-  socket.disconnect();
 });
 
 watch(
@@ -324,7 +374,6 @@ watch(
   },
   { deep: true },
 )
-
 
 watch(inputMessage, (newValue) => {
   if (newValue.trim() !== '') {
@@ -376,7 +425,7 @@ async function handleSubmitMessage() {
 
 async function selectRoom(index: number) {
   selectIndexing.value = index
-  await chatFBRoomStore.deleteTempChatFBRooms(chatRoomsList[selectIndexing.value].userId);
+  await chatFBRoomStore.deleteTempChatFBRooms(chatRoomsList[selectIndexing.value].sender.userId);
 }
 
 function toggleSubmenu() {
@@ -444,6 +493,7 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
+
 </script>
 
 <style scoped>

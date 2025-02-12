@@ -62,13 +62,21 @@
                 :key="index"
                 :class="message.role"
               >
-                <p
+                <div
+                  v-if="message.type == 'text'"
                   class="py-1"
-                  v-for="(messager, index) in message.content.split('\\n')"
-                  :key="index"
                 >
-                  {{ messager }}
-                </p>
+                  <p v-for="(messager, index) in message.content.split('\n')"
+                  :key="index" class="text-black" >
+                    {{ messager }}
+                  </p>
+                </div>
+                <img
+                  v-else
+                  :src="message.content"
+                  alt="image"
+                  class="w-40 h-40 object-cover rounded-md"
+                />
               </div>
             </div>
             <div v-if="isAssistantTyping" class="assistant">
@@ -205,7 +213,7 @@ function validateInput() {
 let chatRoomsList: {
   id: string
   chatOption: { name: string; temperature: string; systemPrompt: string }
-  messages: Array<{ role: string; content: string }>
+  messages: Array<{ type:string; role: string; content: string }>
 }[] = []
 
 onMounted(async () => {
@@ -245,30 +253,39 @@ watch(inputMessage, (newValue) => {
 
 async function handleSubmitMessage() {
   if (chatRoomsList.length == 0) {
-    openCreateModalSystemPrompt()
-  } else {
-    const messageContent = inputMessage.value
-    inputMessage.value = ''
-    if (messageContent.trim() != '') {
-      isAssistantTyping.value = true
-      nextTick(() => {
-        if (messagesContainer.value) {
-          messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-        }
-      })
-      await chatRoomsStore.submitMessage({
-        id: chatRoomsList[selectIndexing.value].id,
-        systemPrompt: chatRoomsList[selectIndexing.value].chatOption.systemPrompt,
-        temperature: chatRoomsList[selectIndexing.value].chatOption.temperature,
-        message: messageContent,
-      })
-      isAssistantTyping.value = false
-      nextTick(() => {
-        if (messagesContainer.value) {
-          messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
-        }
-      })
-    }
+    // openCreateModalSystemPrompt()
+    type.value = 'create'
+    await chatRoomsStore.createChatRooms({
+      account_owner: profile.username,
+      chatOption: {
+        name: name.value,
+        temperature: system_prompt.value.temperature,
+        systemPrompt: system_prompt.value.content,
+      },
+      messages: [],
+    })
+  } 
+  const messageContent = inputMessage.value
+  inputMessage.value = ''
+  if (messageContent.trim() != '') {
+    isAssistantTyping.value = true
+    nextTick(() => {
+      if (messagesContainer.value) {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+      }
+    })
+    await chatRoomsStore.submitMessage({
+      id: chatRoomsList[selectIndexing.value].id,
+      systemPrompt: chatRoomsList[selectIndexing.value].chatOption.systemPrompt,
+      temperature: chatRoomsList[selectIndexing.value].chatOption.temperature,
+      message: messageContent,
+    })
+    isAssistantTyping.value = false
+    nextTick(() => {
+      if (messagesContainer.value) {
+        messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight
+      }
+    })
   }
 }
 
@@ -295,12 +312,25 @@ const handleClickOutside = (event: MouseEvent) => {
 const isModalSystemPromptOpen = ref(false)
 const isModalDeleteOpen = ref(false)
 
-function openCreateModalSystemPrompt() {
+async function openCreateModalSystemPrompt() {
   type.value = 'create'
   name.value = ''
   systemPrompt.value = system_prompt.value.content
   temperature.value = system_prompt.value.temperature
-  isModalSystemPromptOpen.value = true
+
+  type.value = 'create'
+  await chatRoomsStore.createChatRooms({
+    account_owner: profile.username,
+    chatOption: {
+      name: name.value,
+      temperature: system_prompt.value.temperature,
+      systemPrompt: system_prompt.value.content,
+    },
+    messages: [],
+  })
+
+  selectIndexing.value = chatRoomsList.length-1
+
 }
 
 function openModalSystemPrompt() {
@@ -350,6 +380,7 @@ async function handleConfirmSystemPrompt() {
 
 async function handleConfirmDelete() {
   await chatRoomsStore.deleteChatRooms(chatRoomsList[selectIndexing.value].id)
+  selectIndexing.value = chatRoomsList.length - 1
   closeModalDelete()
 }
 

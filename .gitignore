@@ -2,7 +2,13 @@
 .venv/***
 .env/***
 db/***
-*/__pycache__/***
+**/__pycache__/***
 env/bin/*
 env/*
 openthairag/app/__pycache__/***
+openthairag/app/uploads/*
+**/__pycache__/** */
+openthairag/app/__pycache__/db.cpython-312.pyc
+openthairag/app/__pycache__/gunicorn_config.cpython-312.pyc
+openthairag/app/__pycache__/processing.cpython-312.pyc
+openthairag/app/__pycache__/web.cpython-312.pyc

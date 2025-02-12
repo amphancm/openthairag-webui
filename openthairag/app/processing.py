@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, Response
+from toolcalling.tools import get_tools
 from pymilvus import connections, Collection, FieldSchema, CollectionSchema, utility, DataType
 from transformers import AutoTokenizer, AutoModel
 import torch
@@ -12,16 +13,20 @@ import logging
 from db import Connection
 from bson.json_util import dumps
 import openai
+import json
+from toolcalling.tool_function import *
 
 MILVUS_HOST = os.environ.get('MILVUS_HOST', 'milvus')
 MILVUS_PORT = os.environ.get('MILVUS_PORT', '19530')
 VLLM_HOST = os.environ.get('VLLM_HOST', '172.17.0.1:8000')
 SYSTEM_PROMPT = os.environ.get('SYSTEM_PROMPT', 'คุณคือ OpenThaiGPT พัฒนาโดยสมาคมผู้ประกอบการปัญญาประดิษฐ์ประเทศไทย (AIEAT)')
+
+
+LLM_API_DOMAIN = os.environ.get('LLM_API_DOMAIN', 'https://api.aieat.or.th')
+LLM_API_KEY = os.environ.get('LLM_API_KEY', '')
+LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'hf.co/mradermacher/openthaigpt1.5-72b-instruct-GGUF:Q4_K_S')
+
 # connections.connect("default", host=MILVUS_HOST, port=MILVUS_PORT)
-openai.api_base = f"https://{VLLM_HOST}/v1"
-openai.api_key = "dummy"  # vLLM doesn't require a real API key
-print(f"OpenAI API base: {openai.api_base}")
-print(f"OpenAI API key: {openai.api_key}")
 
 logger = logging.getLogger(__name__)
 
@@ -97,59 +102,12 @@ def rerank_documents(query_embedding, document_embeddings):
     ranked_documents = sorted(enumerate(similarities.flatten()), key=lambda x: x[1], reverse=True)
     return ranked_documents
 
-tools = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_current_temperature",
-            "description": "Get current temperature at a location.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "location": {
-                        "type": "string",
-                        "description": 'The location to get the temperature for, in the format "City, State, Country".',
-                    },
-                    "unit": {
-                        "type": "string",
-                        "enum": ["celsius", "fahrenheit"],
-                        "description": 'The unit to return the temperature in. Defaults to "celsius".',
-                    },
-                },
-                "required": ["location"],
-            },
-        },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_temperature_date",
-            "description": "Get temperature at a location and date.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "location": {
-                        "type": "string",
-                        "description": 'The location to get the temperature for, in the format "City, State, Country".',
-                    },
-                    "date": {
-                        "type": "string",
-                        "description": 'The date to get the temperature for, in the format "Year-Month-Day".',
-                    },
-                    "unit": {
-                        "type": "string",
-                        "enum": ["celsius", "fahrenheit"],
-                        "description": 'The unit to return the temperature in. Defaults to "celsius".',
-                    },
-                },
-                "required": ["location", "date"],
-            },
-        },
-    },
-]
-
 def compute_model(query,arr_history, system_prompt, temperature):
-    # Step 1: Generate query embedding
+    assistant_message = None
+
+    openai.api_base = f"{LLM_API_DOMAIN}/v1"
+    openai.api_key = LLM_API_KEY # vLLM doesn't require a real API key
+
     query_embedding = generate_embedding(query).numpy().flatten().tolist()
     
     # Prepare search parameters
@@ -192,6 +150,10 @@ def compute_model(query,arr_history, system_prompt, temperature):
 
     prompt_chatml = []
 
+    prompt_chatml.append({
+        'role': 'system',
+        'content': 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น \n\n'+system_prompt+'\n\n'+prompt 
+    })
     for dat in arr_history:
         prompt_chatml.append(dat)
     prompt_chatml.append({
@@ -199,37 +161,69 @@ def compute_model(query,arr_history, system_prompt, temperature):
         'content': query
     })
 
-    chatOptions = {"selectedModel": ".", "systemPrompt": 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น \n\n'+system_prompt+'\n\n'+prompt, "temperature": float(temperature) if temperature != '' else 0.5 }
+    while True:
+        # try:
+        print(f"OpenAI API base: {openai.api_base}")
+        print(f"OpenAI API key: {openai.api_key}")
+        print("Creating ChatCompletion...")
+        response = openai.ChatCompletion.create(
+            model=LLM_MODEL_NAME,  
+            messages=prompt_chatml,
+            tools=get_tools(),
+            temperature=float(temperature) if temperature != '' else 0.5 ,
+        )
 
-    print("prompt_chatml :",prompt_chatml)
-    print("chatOptions :",chatOptions)
+        assistant_message = response.choices[0].message
+        print(f"Assistant message: {assistant_message}")
+        prompt_chatml.append(assistant_message)
+        print(f"Updated messages: {prompt_chatml}")
+
+        if tool_calls := assistant_message.get("tool_calls", None):
+            print(f"Tool calls found: {tool_calls}")
+            for tool_call in tool_calls:
+                call_id = tool_call["id"]
+                print(f"Processing tool call with id: {call_id}")
+                if fn_call := tool_call.get("function"):
+                    fn_name = fn_call["name"]
+                    fn_args = json.loads(fn_call["arguments"])
+                    print(f"Function call: {fn_name}, arguments: {fn_args}")
+                
+                    fn = get_function_by_name(fn_name)
+                    fn_res = json.dumps(fn(**fn_args), ensure_ascii=False)
+                    print(f"Function result: {fn_res}")
+
+                    prompt_chatml.append({
+                        "role": "tool",
+                        "content": fn_res,
+                        "tool_call_id": call_id,
+                    })
+                    print(f"Updated messages after tool call: {prompt_chatml}")
+        else:
+            print("No tool calls made, exiting loop")
+            break  # Exit the loop if no tool calls
+
+        # except Exception as e:
+        #     print(f"Error occurred: {str(e)}")
+        #     break
+
     
-    response = requests.post(
-        'https://demo72b.aieat.or.th/api/chat',
-        headers={
-            'accept': '*/*',
-            'accept-language': 'en-US,en;q=0.9',
-            'content-type': 'application/json',
-            'dnt': '1',
-            'origin': 'https://demo72b.aieat.or.th',
-            'priority': 'u=1, i',
-            'referer': 'https://demo72b.aieat.or.th/',
-            'sec-ch-ua': '"Chromium";v="131", "Not_A Brand";v="24"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"macOS"',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-origin',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
-        },
-        json={
-            "messages": prompt_chatml,
-            "chatOptions": chatOptions
-        }
-    )
+    # print(f"ChatCompletion response: {response}")
 
-    print("response :",convertTextFromRes(response.text))
-    return convertTextFromRes(response.text)
+    print("assistant :",assistant_message)
+    print("response :",response)
+    # return response.choices[0].message
+    if assistant_message and assistant_message.get("content"):
+        print(f"Generated Text: {assistant_message['content']}")
+        return assistant_message
+    else:
+        print("response :",response.choices[0].message)
+        return response.choices[0].message
+
+def get_function_by_name(name):
+    print(f"Getting function by name: {name}")
+    result = globals()[name]
+    print(f"Function retrieved: {result}")
+    return result
 
 def convertTextFromRes(res):
     result = []

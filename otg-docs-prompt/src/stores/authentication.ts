@@ -1,6 +1,7 @@
 import router from '@/router'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { CONFIG } from '@/config'
 
 export const useAuthenticationStore = defineStore('authenticationStore', {
   state: () => ({
@@ -9,7 +10,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
   actions: {
     async login(body: { username: string, password: string, remember: boolean }) {
       try {
-          const response = await fetch('http://localhost:5500/login', {
+          const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
@@ -26,7 +27,7 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
     async logout() {
       try {
           const token = ref(localStorage.getItem("token"));
-          const response = await fetch('http://localhost:5500/logout', {
+          const response = await fetch(`${CONFIG.API_BASE_URL}/auth/logout`, {
             method: 'POST',
             headers:{
               'Authorization' : 'Bearer '+token.value
@@ -44,26 +45,22 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
     async getProfile() {
       try {
         const token = ref(localStorage.getItem("token"));
-        const response = await fetch('http://localhost:5500/profile', {headers:{
+        const response = await fetch(`${CONFIG.API_BASE_URL}/auth/profile`, {headers:{
           'Authorization' : 'Bearer '+token.value
         }})
-        const res = await handleResponse(response);
-        this.profile = res
-        return res
+        // const res = await handleResponse(response);
+        if (response.status === 401) {
+          localStorage.removeItem("token");
+          router.push({ path: "/login" }).catch((err) => console.error(err));
+          return;
+        }
+
+        const profileData = await response.json();
+        this.profile = profileData;
+        return profileData
       } catch (error) {
         console.error('Failed to fetch systemPrompts:', error)
       }
     },
   },
 })
-
-async function handleResponse(response: Response) {
-  if (response.status != 200) {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-    router.push({ path: "/login" }).catch((err) => console.error(err));
-    return null
-  }
-  return response.json();
-}
-

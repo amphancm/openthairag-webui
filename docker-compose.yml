@@ -11,11 +11,15 @@ services:
     environment:
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
+      - API_URL=
+      - LLM_API_DOMAIN=https://api.aieat.or.th
+      - LLM_API_KEY=
+      - LLM_MODEL_NAME=hf.co/mradermacher/openthaigpt1.5-72b-instruct-GGUF:Q4_K_S
     depends_on:
       - milvus
       - mongo
     restart: always
-  
+
   otg-docs-prompt:
     build: ./otg-docs-prompt
     ports:
@@ -80,3 +84,4 @@ volumes:
   milvus_data:
   etcd_data:
   minio_data:
+  redis_data:

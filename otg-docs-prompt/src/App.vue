@@ -15,11 +15,13 @@
               <div class="space-y-4 text-left ml-10">
                 <h4><RouterLink to="/docs">Documents</RouterLink></h4>
                 <h4><RouterLink to="/system_prompt">System Prompt</RouterLink></h4>
+                <h4><RouterLink to="/products">Product</RouterLink></h4>
+                <h4><RouterLink to="/issues">User feedback</RouterLink></h4>
                 <h4>
                   <button
                     class="w-full text-left focus:outline-none"
                     @click="toggleSubmenu('chat')"
-                  >
+                  >   
                     Chat
                   </button>
                 </h4>
