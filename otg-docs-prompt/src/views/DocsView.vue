@@ -31,7 +31,7 @@
                 <p class="truncate w-36">{{ doc.title }}</p>
               </td>
               <td class="p-3 border border-gray-300">
-                <p class="truncate whitespace-pre line-clamp-1">
+                <p class="truncate whitespace-pre line-clamp-1 w-[500px]">
                   {{ doc.content }}
                 </p>
               </td>

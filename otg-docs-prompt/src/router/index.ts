@@ -66,11 +66,6 @@ const router = createRouter({
       component: EditDocsView,
     },
     {
-      path: '/docs/:id',
-      name: 'editing-docs',
-      component: EditIssueView,
-    },
-    {
       path: '/docs/create',
       name: 'create-doc',
       component: CreateDocsView,
