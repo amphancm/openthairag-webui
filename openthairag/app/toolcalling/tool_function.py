@@ -24,8 +24,11 @@ def get_current_time(location):
 
 def get_product_recommand(category):
 
+    setting = mongo.setting.find_one()
+    if not setting['product_activate']:
+        return {'message': 'Product is not activated'}
+
     products = mongo.products.find({'category': category})
-    
     print(f"Products count : {products}")
     return {
         "products": [{
@@ -35,8 +38,13 @@ def get_product_recommand(category):
             "pictures": list(map(lambda picture: f"{API_URL}/{picture}", item["picture"])),        
         } for item in products]
     }
+    
 
 def insert_feedback(name, detail, user_name):
+
+    setting = mongo.setting.find_one()
+    if not setting['feedback_activate']:
+        return {'message': 'Feedback is not activated'}
 
     mongo.issues.insert_one({
         "name": name,

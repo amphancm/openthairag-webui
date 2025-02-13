@@ -21,7 +21,7 @@ def setting_patch(data):
             'line_activate': data['line_activate'],
             'fb_activate': data['fb_activate'],
             'product_activate': data['product_activate'],
-            'order_activate': data['order_activate'],
+            'feedback_activate': data['feedback_activate'],
             'greeting_activate': data['greeting_activate'],
             'line_key': data['line_key'],
             'line_secret': data['line_secret'],

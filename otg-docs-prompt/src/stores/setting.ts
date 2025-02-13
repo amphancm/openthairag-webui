@@ -23,13 +23,13 @@ export const useSettingStore = defineStore('SettingStore', {
         }
         const data = await response.json()
         data.forEach(
-          (element: { _id: { $oid: string }; fb_activate: boolean;  line_activate: boolean;  product_activate: boolean;  order_activate: boolean; greeting_activate: boolean; line_key: string; line_secret: string; facebook_token: string; facebook_verify_password:string; greeting_prompt:string; }) => {
+          (element: { _id: { $oid: string }; fb_activate: boolean;  line_activate: boolean;  product_activate: boolean;  feedback_activate: boolean; greeting_activate: boolean; line_key: string; line_secret: string; facebook_token: string; facebook_verify_password:string; greeting_prompt:string; }) => {
             this.Settings = {
               id: element._id.$oid,
               fb_activate: element.fb_activate ?? false,
               line_activate: element.line_activate ?? false,
               product_activate: element.product_activate ?? false,
-              order_activate: element.order_activate ?? false,
+              feedback_activate: element.feedback_activate ?? false,
               greeting_activate: element.greeting_activate ?? false,
               line_key: element.line_key ?? '',
               line_secret: element.line_secret ?? '',
@@ -47,7 +47,7 @@ export const useSettingStore = defineStore('SettingStore', {
       line_activate: boolean; 
       fb_activate: boolean; 
       product_activate: boolean; 
-      order_activate: boolean; 
+      feedback_activate: boolean; 
       greeting_activate: boolean; 
       line_key: string; 
       line_secret: string; 
@@ -75,7 +75,7 @@ export const useSettingStore = defineStore('SettingStore', {
           line_activate: newSetting.line_activate ?? false,
           fb_activate: newSetting.fb_activate ?? false,
           product_activate: newSetting.product_activate ?? false,
-          order_activate: newSetting.order_activate ?? false,
+          feedback_activate: newSetting.feedback_activate ?? false,
           line_key: newSetting.line_key ?? '',
           line_secret: newSetting.line_secret ?? '',
           facebook_token: newSetting.facebook_token ?? '',
@@ -91,7 +91,7 @@ export const useSettingStore = defineStore('SettingStore', {
       line_activate: boolean; 
       fb_activate: boolean; 
       product_activate: boolean; 
-      order_activate: boolean; 
+      feedback_activate: boolean; 
       greeting_activate: boolean; 
       line_key: string; 
       line_secret: string; 
