@@ -69,7 +69,7 @@ def create_default_user():
             "line_activate": False,
             "fb_activate": False,
             "product_activate": False,
-            "order_activate": False,
+            "feedback_activate": False,
             "greeting_activate": False,
             "line_key": "",
             "line_secret": "",

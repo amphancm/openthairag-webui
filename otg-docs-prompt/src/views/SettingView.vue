@@ -205,7 +205,7 @@ const setting = computed(() => ({
   fb_activate: Boolean(settingStore.Settings.fb_activate),
   line_activate: Boolean(settingStore.Settings.line_activate),
   product_activate: Boolean(settingStore.Settings.product_activate),
-  order_activate: Boolean(settingStore.Settings.order_activate),
+  feedback_activate: Boolean(settingStore.Settings.feedback_activate),
   greeting_activate: Boolean(settingStore.Settings.greeting_activate),
   greeting_prompt: String(settingStore.Settings.greeting_prompt),
   line_key: String(settingStore.Settings.line_key),
@@ -226,7 +226,7 @@ onMounted(async () => {
   isFacebookTokenEnabled.value = Boolean(settingStore.Settings.fb_activate)
   isLineTokenEnabled.value = Boolean(settingStore.Settings.line_activate)
   isProductTokenEnabled.value = Boolean(settingStore.Settings.product_activate)
-  isOrderTokenEnabled.value = Boolean(settingStore.Settings.order_activate)
+  isOrderTokenEnabled.value = Boolean(settingStore.Settings.feedback_activate)
   isGreetingEnabled.value = Boolean(settingStore.Settings.greeting_activate)
 })
 
@@ -248,7 +248,7 @@ async function handleSave() {
       fb_activate: isFacebookTokenEnabled.value,
       line_activate: isLineTokenEnabled.value,
       product_activate: isProductTokenEnabled.value,
-      order_activate: isOrderTokenEnabled.value,
+      feedback_activate: isOrderTokenEnabled.value,
       greeting_activate: isGreetingEnabled.value,
       line_key: setting.value.line_key,
       line_secret: setting.value.line_secret,
@@ -265,7 +265,7 @@ async function handleSave() {
         fb_activate: isFacebookTokenEnabled.value,
         line_activate: isLineTokenEnabled.value,
         product_activate: isProductTokenEnabled.value,
-        order_activate: isOrderTokenEnabled.value,
+        feedback_activate: isOrderTokenEnabled.value,
         greeting_activate: isGreetingEnabled.value,
         line_key: setting.value.line_key,
         line_secret: setting.value.line_secret,
