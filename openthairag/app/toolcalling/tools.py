@@ -19,13 +19,15 @@ tools = [
     {
         "type": "function",
         "function": {
-            "name": "get_product_recommand",
-            "description": "Get the product for present to user When a user asks something that he wants to know the answer to, such as what to eat tonight, you can search for food information with this function to present to the user by entering the following categories: food, service, travel",
+            "name": "get_more_product_detail",
+            "description": "Get more detail or picture from user quation such as ขอข้อมูลเพิ่มเติม or ขอตัวอย่าง or ขอรูปภาพ",
             "parameters": { 
                 "type": "object",
-                "category": {
-                    "type": "string",
-                    "description": 'the category name of product (only food, service, travel )',
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "description": "the type of service is only product or service",
+                    },
                 },
                 "required": ["category"],
             },

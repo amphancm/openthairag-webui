@@ -22,14 +22,12 @@ def get_current_time(location):
         "time_now": get_datetime_now(result)
     }
 
-def get_product_recommand(category):
-
+def get_more_product_detail(category):
     setting = mongo.setting.find_one()
     if not setting['product_activate']:
         return {'message': 'Product is not activated'}
 
-    products = mongo.products.find({'category': category})
-    print(f"Products count : {products}")
+    products = mongo.products.find()
     return {
         "products": [{
             "name": f"{item["name"]}",
