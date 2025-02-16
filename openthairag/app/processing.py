@@ -152,7 +152,7 @@ def compute_model(query,arr_history, system_prompt, temperature):
 
     prompt_chatml.append({
         'role': 'system',
-        'content': 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น \n\n'+system_prompt+'\n\n'+prompt 
+        'content': 'คุณคือผู้ช่วยตอบคำถามที่ฉลาดและซื่อสัตย์ โปรดเลือกใช้ function get_more_detail ก่อนการตัดสินใจในการตอบคำถาม และเชื่อในข้อมูลจาก เอกสารเหล่านี้เท่านั้น \n\n'+system_prompt+'\n\n'+prompt 
     })
     for dat in arr_history:
         prompt_chatml.append(dat)
@@ -178,33 +178,39 @@ def compute_model(query,arr_history, system_prompt, temperature):
         prompt_chatml.append(assistant_message)
         print(f"Updated messages: {prompt_chatml}")
 
-        if tool_calls := assistant_message.get("tool_calls", None):
-            print(f"Tool calls found: {tool_calls}")
-            for tool_call in tool_calls:
-                call_id = tool_call["id"]
-                print(f"Processing tool call with id: {call_id}")
-                if fn_call := tool_call.get("function"):
-                    fn_name = fn_call["name"]
-                    fn_args = json.loads(fn_call["arguments"])
-                    print(f"Function call: {fn_name}, arguments: {fn_args}")
-                
-                    fn = get_function_by_name(fn_name)
-                    fn_res = json.dumps(fn(**fn_args), ensure_ascii=False)
-                    print(f"Function result: {fn_res}")
+        try:
 
-                    prompt_chatml.append({
-                        "role": "tool",
-                        "content": fn_res,
-                        "tool_call_id": call_id,
-                    })
-                    print(f"Updated messages after tool call: {prompt_chatml}")
-        else:
-            print("No tool calls made, exiting loop")
-            break  # Exit the loop if no tool calls
+            if tool_calls := assistant_message.get("tool_calls", None):
+                print(f"Tool calls found: {tool_calls}")
+                for tool_call in tool_calls:
+                    call_id = tool_call["id"]
+                    print(f"Processing tool call with id: {call_id}")
+                    if fn_call := tool_call.get("function"):
+                        print(f"Function call found: {fn_call}")
+                        fn_name = fn_call["name"]
+                        fn_args = json.loads(fn_call["arguments"])
+                        print(f"Function call: {fn_name}, arguments: {fn_args}")
+                    
+                        fn = get_function_by_name(fn_name)
+                        fn_res = json.dumps(fn(**fn_args), ensure_ascii=False)
+                        print(f"Function result: {fn_res}")
 
+                        prompt_chatml.append({
+                            "role": "tool",
+                            "content": fn_res,
+                            "tool_call_id": call_id,
+                        })
+                        print(f"Updated messages after tool call: {prompt_chatml}")
+            else:
+                print("No tool calls made, exiting loop")
+                break  # Exit the loop if no tool calls
+        
         # except Exception as e:
         #     print(f"Error occurred: {str(e)}")
         #     break
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            break
 
     
     # print(f"ChatCompletion response: {response}")

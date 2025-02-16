@@ -219,11 +219,9 @@ function processText(input: string) {
   let match: RegExpExecArray | null;
 
   while ((match = regex.exec(input)) !== null) {
-    // Add the part of the text before the current match
     if (lastIndex !== match.index) {
       parts.push(input.slice(lastIndex, match.index).trim());
     }
-    // Add the matched image markdown
     if (match[0].startsWith('!')) {
       parts.push(match[1]);
     } else {
@@ -233,9 +231,13 @@ function processText(input: string) {
     lastIndex = regex.lastIndex;
   }
 
-  // Add the remaining text after the last match
   if (lastIndex < input.length) {
     parts.push(input.slice(lastIndex).trim());
+  }
+
+  if (parts.length === 1) {
+    const splitResult = input.split(/(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gi); // Regex to split text and URL
+    return splitResult.map((item) => item.trim()).filter((item) => item !== "");
   }
 
   return parts;

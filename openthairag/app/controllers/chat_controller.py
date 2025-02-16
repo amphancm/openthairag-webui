@@ -905,6 +905,11 @@ def process_text(input: str):
     if last_index < len(input):
         parts.append(input[last_index:].strip())
 
+    if len(parts) == 1:
+        split_result = [item.strip() for item in re.split(r"(https?:\/\/.*\.(?:png|jpg|jpeg|gif))", parts[0]) if item.strip()]
+        transformed_result = [item.upper() if not re.match(r"https?:\/\/", item) else item for item in split_result]
+        return transformed_result
+
     return parts
 
 def is_valid_image_url(url: str) -> bool:
