@@ -12,7 +12,7 @@ import numpy as np
 import logging
 from db import Connection
 from bson.json_util import dumps
-import openai
+from openai import OpenAI
 import json
 from toolcalling.tool_function import *
 
@@ -105,9 +105,6 @@ def rerank_documents(query_embedding, document_embeddings):
 def compute_model(query,arr_history, system_prompt, temperature):
     assistant_message = None
 
-    openai.api_base = f"{LLM_API_DOMAIN}/v1"
-    openai.api_key = LLM_API_KEY # vLLM doesn't require a real API key
-
     query_embedding = generate_embedding(query).numpy().flatten().tolist()
     
     # Prepare search parameters
@@ -161,15 +158,18 @@ def compute_model(query,arr_history, system_prompt, temperature):
         'content': query
     })
 
+    client = OpenAI(
+        base_url=f"{LLM_API_DOMAIN}",
+        api_key=LLM_API_KEY,
+    )
+
     while True:
         # try:
-        print(f"OpenAI API base: {openai.api_base}")
-        print(f"OpenAI API key: {openai.api_key}")
         print("Creating ChatCompletion...")
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=LLM_MODEL_NAME,  
             messages=prompt_chatml,
-            tools=get_tools(),
+            # tools=get_tools(),
             temperature=float(temperature) if temperature != '' else 0.5 ,
         )
 
@@ -218,8 +218,8 @@ def compute_model(query,arr_history, system_prompt, temperature):
     print("assistant :",assistant_message)
     print("response :",response)
     # return response.choices[0].message
-    if assistant_message and assistant_message.get("content"):
-        print(f"Generated Text: {assistant_message['content']}")
+    if assistant_message and hasattr(assistant_message, "content"):
+        print(f"Generated Text: {assistant_message.content}")
         return assistant_message
     else:
         print("response :",response.choices[0].message)

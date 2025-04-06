@@ -184,7 +184,7 @@ def system_history_post(data):
 
     message = {
         'role': 'assistant',
-        'content': otg['content'],
+        'content': otg.content,
     }
 
     mongo.chatHistory.update_one({
@@ -212,7 +212,7 @@ def system_history_post(data):
         {
             '$set': {
                 'chatOption': {
-                    "name": res['content'].replace('"', ''),
+                    "name": res.content.replace('"', ''),
                     "temperature": result['chatOption']['temperature'],
                     "systemPrompt": result['chatOption']['systemPrompt']
                 }
@@ -220,7 +220,7 @@ def system_history_post(data):
         })
     
     return {
-        "title_name": res['content'].replace('"', '') if result['chatOption']['name'] == "" else result['chatOption']['name'],
+        "title_name": res.content.replace('"', '') if result['chatOption']['name'] == "" else result['chatOption']['name'],
         "message": message
     }, 200
 
