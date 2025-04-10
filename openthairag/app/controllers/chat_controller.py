@@ -449,7 +449,7 @@ def line_callback(data):
                         '$each': [{
                             'role': 'assistant',
                             'user': id,
-                            'content': otg['content'].replace("\\n", "\n"),
+                            'content': otg.content.replace("\\n", "\n"),
                             'timestamp': datetime.datetime.now()
                         }]
                     }
@@ -460,13 +460,13 @@ def line_callback(data):
                 'message':{
                     'role': 'assistant',
                     'user': 0,
-                    'content': otg['content'].replace("\\n", "\n"),
+                    'content': otg.content.replace("\\n", "\n"),
                     'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 },
                 'line_ids':disname.user_id
             })
 
-            parts = process_text(otg['content'])
+            parts = process_text(otg.content)
             print(f"parts =>>>>>>> : {parts}")
             for part in parts:
                 if is_valid_image_url(part):
@@ -675,7 +675,7 @@ def fb_callback_post(data):
                         'role': 'assistant',
                         'user': sender_id,
                         'mid': None,
-                        'content': otg['content'].replace("\\n", "\n"),
+                        'content': otg.content.replace("\\n", "\n"),
                         'timestamp': datetime.datetime.now()
                     }]
                 }
@@ -686,14 +686,14 @@ def fb_callback_post(data):
             'message':{
                 'role': 'assistant',
                 'user': 0,
-                'content': otg['content'].replace("\\n", "\n"),
+                'content': otg.content.replace("\\n", "\n"),
                 'timestamp': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             },
             'fb_ids':sender_id
         })
 
 
-        parts = process_text(otg['content'])
+        parts = process_text(otg.content)
         print(f"parts =>>>>>>> : {parts}")
         for part in parts:
             if is_valid_image_url(part):
