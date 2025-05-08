@@ -29,6 +29,7 @@ LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME')
 # connections.connect("default", host=MILVUS_HOST, port=MILVUS_PORT)
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG) 
 
 # Function to initialize Milvus collection
 def initialize_milvus_collection():
@@ -166,6 +167,10 @@ def compute_model(query,arr_history, system_prompt, temperature):
     while True:
         # try:
         print("Creating ChatCompletion...")
+        logger.info(f"{LLM_API_DOMAIN}")
+        logger.info(f"{LLM_API_KEY}")
+        logger.info(f"{LLM_MODEL_NAME}")
+
         response = client.chat.completions.create(
             model=LLM_MODEL_NAME,  
             messages=prompt_chatml,
