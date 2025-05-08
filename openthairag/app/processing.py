@@ -18,13 +18,13 @@ from toolcalling.tool_function import *
 
 MILVUS_HOST = os.environ.get('MILVUS_HOST', 'milvus')
 MILVUS_PORT = os.environ.get('MILVUS_PORT', '19530')
-VLLM_HOST = os.environ.get('VLLM_HOST', '172.17.0.1:8000')
+VLLM_HOST   = os.environ.get('VLLM_HOST', '172.17.0.1:8000')
 SYSTEM_PROMPT = os.environ.get('SYSTEM_PROMPT', 'คุณคือ OpenThaiGPT พัฒนาโดยสมาคมผู้ประกอบการปัญญาประดิษฐ์ประเทศไทย (AIEAT)')
 
 
-LLM_API_DOMAIN = os.environ.get('LLM_API_DOMAIN', 'https://api.aieat.or.th')
-LLM_API_KEY = os.environ.get('LLM_API_KEY', '')
-LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME', 'hf.co/mradermacher/openthaigpt1.5-72b-instruct-GGUF:Q4_K_S')
+LLM_API_DOMAIN = os.environ.get('LLM_API_DOMAIN')
+LLM_API_KEY    = os.environ.get('LLM_API_KEY')
+LLM_MODEL_NAME = os.environ.get('LLM_MODEL_NAME')
 
 # connections.connect("default", host=MILVUS_HOST, port=MILVUS_PORT)
 
