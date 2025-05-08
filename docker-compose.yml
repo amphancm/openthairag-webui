@@ -12,9 +12,9 @@ services:
       - MILVUS_HOST=milvus
       - MILVUS_PORT=19530
       - API_URL=http://localhost:5500 ## Picture URL When You send image with product to User
-      - LLM_API_DOMAIN=https://openrouter.ai/api/v1 ## LLM API Domain it not working with localhost PLease forwatd port to public
+      - LLM_API_DOMAIN=https://api.together.xyz/v1 ## LLM API Domain it not working with localhost PLease forwatd port to public
       - LLM_API_KEY=
-      - LLM_MODEL_NAME=meta-llama/llama-4-scout:free ## Model Name that you want to use (make sure you run it)
+      - LLM_MODEL_NAME=meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo ## Model Name that you want to use (make sure you run it)
     depends_on:
       - milvus
       - mongo

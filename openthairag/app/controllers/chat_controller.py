@@ -175,6 +175,8 @@ def system_history_post(data):
         }
     })
 
+    result = mongo.chatHistory.find_one({'_id': ObjectId(data['id'])})
+
     otg = compute_model(
         data['message'],
         result['messages'],
@@ -197,6 +199,8 @@ def system_history_post(data):
             }
         }
     })
+
+    result = mongo.chatHistory.find_one({'_id': ObjectId(data['id'])})
 
     if (len(result['messages']) < 3):
         res = compute_model(
