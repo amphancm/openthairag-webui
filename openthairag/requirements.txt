@@ -18,3 +18,4 @@ python-socketio[client]
 timezonefinder==6.5.8
 geopy
 accelerate
+marshmallow==3.26.1
