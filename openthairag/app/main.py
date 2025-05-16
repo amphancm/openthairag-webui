@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 MILVUS_HOST = os.environ.get('MILVUS_HOST', 'milvus')
 MILVUS_PORT = os.environ.get('MILVUS_PORT', '19530')
-VLLM_HOST = os.environ.get('VLLM_HOST', '172.17.0.1:8000')
+VLLM_HOST   = os.environ.get('VLLM_HOST', '172.17.0.1:8000')
 
 app = Flask(__name__)
 CORS(app)
@@ -39,7 +39,7 @@ def check_if_token_is_revoked(jwt_header, jwt_payload):
 
 def create_default_user():
     default_username = "admin"
-    default_email = "admin@admin.com"
+    default_email    = "admin@admin.com"
     default_password = "admin"
 
     user = mongo.accounts.count_documents({"username": default_username})
