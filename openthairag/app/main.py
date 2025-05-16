@@ -1,10 +1,13 @@
-from flask import Flask, send_from_directory
-from routes import register_routes
-from config import Config
-from flask_cors import CORS
 import logging, os
-from routes.auth_routes import auth_bp
+
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask import Flask, send_from_directory
+
+from config import Config
+from routes import register_routes
+from routes.auth_routes import auth_bp
+
 from controllers.auth_controller import blacklist
 from werkzeug.security import generate_password_hash
 
