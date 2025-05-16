@@ -1,7 +1,9 @@
-from flask import jsonify
 import logging
-from processing import generate_embedding, collection
 import numpy as np
+
+from flask import jsonify
+from processing import generate_embedding, collection
+
 logger = logging.getLogger(__name__)
 
 def get_function_by_name(name):
@@ -28,9 +30,7 @@ def indexing(text):
     logger.debug(f"Full entity: {entity}")
 
     insert_result = collection.insert([entity])
-
     logger.info(f"Insert result: {insert_result}")
-
     collection.flush()
 
     return insert_result.primary_keys[0]
