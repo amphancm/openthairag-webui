@@ -1,26 +1,27 @@
+import os
+import json
+import torch
+import logging
+import datetime
+import requests
+import numpy as np
+
+from db import Connection
+from openai import OpenAI
+from bson.json_util import dumps
+from toolcalling.tool_function import *
+
 from flask import Flask, request, jsonify, Response
 from toolcalling.tools import get_tools
 from pymilvus import connections, Collection, FieldSchema, CollectionSchema, utility, DataType
 from transformers import AutoTokenizer, AutoModel
-import torch
+
 from sklearn.metrics.pairwise import cosine_similarity
-import requests
-import json
-import os
-import datetime
-import numpy as np
-import logging
-from db import Connection
-from bson.json_util import dumps
-from openai import OpenAI
-import json
-from toolcalling.tool_function import *
 
-MILVUS_HOST = os.environ.get('MILVUS_HOST', 'milvus')
-MILVUS_PORT = os.environ.get('MILVUS_PORT', '19530')
-VLLM_HOST   = os.environ.get('VLLM_HOST', '172.17.0.1:8000')
+MILVUS_HOST   = os.environ.get('MILVUS_HOST', 'milvus')
+MILVUS_PORT   = os.environ.get('MILVUS_PORT', '19530')
+VLLM_HOST     = os.environ.get('VLLM_HOST', '172.17.0.1:8000')
 SYSTEM_PROMPT = os.environ.get('SYSTEM_PROMPT', 'คุณคือ OpenThaiGPT พัฒนาโดยสมาคมผู้ประกอบการปัญญาประดิษฐ์ประเทศไทย (AIEAT)')
-
 
 LLM_API_DOMAIN = os.environ.get('LLM_API_DOMAIN')
 LLM_API_KEY    = os.environ.get('LLM_API_KEY')
@@ -99,7 +100,7 @@ def rerank_documents(query_embedding, document_embeddings):
     logger.debug(f"Query embedding shape: {query_embedding.shape}, Document embeddings shape: {document_embeddings.shape}")
     logger.debug(f"Query embedding: {query_embedding}, Document embeddings: {document_embeddings}")
     
-    similarities = cosine_similarity(query_embedding, document_embeddings)
+    similarities     = cosine_similarity(query_embedding, document_embeddings)
     ranked_documents = sorted(enumerate(similarities.flatten()), key=lambda x: x[1], reverse=True)
     return ranked_documents
 
@@ -184,7 +185,6 @@ def compute_model(query,arr_history, system_prompt, temperature):
         print(f"Updated messages: {prompt_chatml}")
 
         try:
-
             if tool_calls := assistant_message.get("tool_calls", None):
                 print(f"Tool calls found: {tool_calls}")
                 for tool_call in tool_calls:
@@ -238,7 +238,7 @@ def get_function_by_name(name):
 
 def convertTextFromRes(res):
     result = []
-    lines = res.splitlines()
+    lines  = res.splitlines()
     for line in lines:
         if ':' in line:
             _, data = line.split(':', 1)  # Split on the first occurrence of ':'
