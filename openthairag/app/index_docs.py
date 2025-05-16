@@ -1,7 +1,7 @@
 import os
-import requests
 import json
 import logging
+import requests
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -14,7 +14,7 @@ def read_and_index_docs(docs_dir='./docs', index_url='http://localhost:5500/inde
     :param docs_dir: Directory containing the .txt files
     :param index_url: URL of the indexing endpoint
     """
-    indexed_files = 0
+    indexed_files     = 0
     non_indexed_files = 0
     
     for filename in os.listdir(docs_dir):
@@ -26,8 +26,8 @@ def read_and_index_docs(docs_dir='./docs', index_url='http://localhost:5500/inde
                     
                 # Split content into chunks of max 1000 characters, including the title in each chunk
                 chunks = []
-                lines = content.split('\n')
-                title = lines[0]  # Get the first line as the title
+                lines  = content.split('\n')
+                title  = lines[0]  # Get the first line as the title
                 current_chunk = title + '\n'  # Start each chunk with the title
                 for line in lines[1:]:  # Skip the first line (title) in this loop
                     if len(current_chunk) + len(line) + 1 <= 1000:  # +1 for newline
