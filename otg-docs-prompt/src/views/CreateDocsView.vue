@@ -5,6 +5,7 @@
     </div>
     <div class="flex parent overflow-y-auto mt-4">
       <div class="overflow-x-auto w-full">
+        <input type="file" @change="handleFileUpload" class="mt-2 mb-4 p-2 border rounded-md">
         <div class="flex">
           <div class="w-40 flex items-center text-left">
             <h4 for="title" class="text-black">Title</h4>
@@ -69,5 +70,23 @@ async function handleCreate() {
   }
   newDoc.value = { title: '', content: '' }
   router.push('/docs')
+}
+
+async function handleFileUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+
+  if (file) {
+    newDoc.value.title = file.name
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      newDoc.value.content = e.target?.result as string
+    }
+    reader.onerror = (e) => {
+      console.error('File reading error:', e)
+      newDoc.value.content = 'Error reading file content.'
+    }
+    reader.readAsText(file)
+  }
 }
 </script>
