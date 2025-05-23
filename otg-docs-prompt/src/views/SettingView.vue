@@ -158,6 +158,48 @@
           </div>
         </div>
 
+        <div class="pt-8">
+          <h1>Model Configuration</h1>
+          <div class="flex mt-4">
+            <div class="w-72 flex text-left items-center">
+              <h4 class="text-black">Model Name</h4>
+            </div>
+            <div class="flex-4 w-full">
+              <input
+                v-model="modelName"
+                class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter Model Name"
+              />
+            </div>
+          </div>
+          <div class="flex mt-4">
+            <div class="w-72 flex text-left items-center">
+              <h4 class="text-black">Model Type</h4>
+            </div>
+            <div class="flex-4 w-full">
+              <select
+                v-model="modelType"
+                class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                <option value="local">Local</option>
+                <option value="api">API</option>
+              </select>
+            </div>
+          </div>
+          <div v-if="modelType === 'api'" class="flex mt-4">
+            <div class="w-72 flex text-left items-center">
+              <h4 class="text-black">API Key</h4>
+            </div>
+            <div class="flex-4 w-full">
+              <input
+                v-model="apiKey"
+                class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Enter API Key"
+              />
+            </div>
+          </div>
+        </div>
+
         <div class="float-end mt-4">
           <button class="bg-red-600 p-4 rounded-md text-white" @click="handleSave">Save</button>
         </div>
@@ -221,6 +263,11 @@ const isGreetingEnabled = ref(false)
 const isLoading = ref(false)
 const isSuccess = ref(false)
 
+// Add new refs
+const modelName = ref('')
+const modelType = ref('local') // Default to 'local'
+const apiKey = ref('')
+
 onMounted(async () => {
   await settingStore.fetchSettings()
   isFacebookTokenEnabled.value = Boolean(settingStore.Settings.fb_activate)
@@ -228,6 +275,11 @@ onMounted(async () => {
   isProductTokenEnabled.value = Boolean(settingStore.Settings.product_activate)
   isOrderTokenEnabled.value = Boolean(settingStore.Settings.feedback_activate)
   isGreetingEnabled.value = Boolean(settingStore.Settings.greeting_activate)
+  
+  // Populate new model config fields
+  modelName.value = settingStore.Settings.model_name || ''
+  modelType.value = settingStore.Settings.model_type || 'local'
+  apiKey.value = settingStore.Settings.api_key || ''
 })
 
 function openModal() {
@@ -243,38 +295,52 @@ async function generateFacebookPassword() {
 }
 
 async function handleSave() {
+  // VALIDATION LOGIC HERE
+  if (modelType.value === 'api') {
+    if (!modelName.value) {
+      alert('Model Name is required for API type.');
+      return;
+    }
+    if (!apiKey.value) {
+      alert('API Key is required for API type.');
+      return;
+    }
+  } else if (modelType.value === 'local') {
+    if (!modelName.value) {
+      alert('Model Name is required for Local type.');
+      return;
+    }
+  }
+
+  const settingsPayload = {
+    fb_activate: isFacebookTokenEnabled.value,
+    line_activate: isLineTokenEnabled.value,
+    product_activate: isProductTokenEnabled.value,
+    feedback_activate: isOrderTokenEnabled.value,
+    greeting_activate: isGreetingEnabled.value,
+    line_key: setting.value.line_key,
+    line_secret: setting.value.line_secret,
+    facebook_token: setting.value.facebook_token,
+    facebook_verify_password: setting.value.facebook_verify_password,
+    greeting_prompt: setting.value.greeting_prompt,
+    // Add new model config fields to payload
+    model_name: modelName.value,
+    model_type: modelType.value,
+    api_key: apiKey.value,
+  };
+
   if (!setting.value.id) {
-    await settingStore.createSetting({
-      fb_activate: isFacebookTokenEnabled.value,
-      line_activate: isLineTokenEnabled.value,
-      product_activate: isProductTokenEnabled.value,
-      feedback_activate: isOrderTokenEnabled.value,
-      greeting_activate: isGreetingEnabled.value,
-      line_key: setting.value.line_key,
-      line_secret: setting.value.line_secret,
-      facebook_token: setting.value.facebook_token,
-      facebook_verify_password: setting.value.facebook_verify_password,
-      greeting_prompt: setting.value.greeting_prompt,
-    })
+    await settingStore.createSetting(settingsPayload) // Pass the combined payload
     openModal()
   } else {
     isLoading.value = true
     try {
       await settingStore.saveSetting({
         id: String(setting.value.id),
-        fb_activate: isFacebookTokenEnabled.value,
-        line_activate: isLineTokenEnabled.value,
-        product_activate: isProductTokenEnabled.value,
-        feedback_activate: isOrderTokenEnabled.value,
-        greeting_activate: isGreetingEnabled.value,
-        line_key: setting.value.line_key,
-        line_secret: setting.value.line_secret,
-        facebook_token: setting.value.facebook_token,
-        facebook_verify_password: setting.value.facebook_verify_password,
-        greeting_prompt: setting.value.greeting_prompt,
+        ...settingsPayload // Spread the combined payload
       })
     } catch (error) {
-      console.error('Error deleting document:', error)
+      console.error('Error saving settings:', error) // Corrected error message
     } finally {
       isLoading.value = false
       openModal()

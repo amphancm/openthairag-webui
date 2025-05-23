@@ -23,7 +23,7 @@ export const useSettingStore = defineStore('SettingStore', {
         }
         const data = await response.json()
         data.forEach(
-          (element: { _id: { $oid: string }; fb_activate: boolean;  line_activate: boolean;  product_activate: boolean;  feedback_activate: boolean; greeting_activate: boolean; line_key: string; line_secret: string; facebook_token: string; facebook_verify_password:string; greeting_prompt:string; }) => {
+          (element: { _id: { $oid: string }; fb_activate: boolean;  line_activate: boolean;  product_activate: boolean;  feedback_activate: boolean; greeting_activate: boolean; line_key: string; line_secret: string; facebook_token: string; facebook_verify_password:string; greeting_prompt:string; model_name?: string; model_type?: string; api_key?: string; }) => {
             this.Settings = {
               id: element._id.$oid,
               fb_activate: element.fb_activate ?? false,
@@ -36,6 +36,9 @@ export const useSettingStore = defineStore('SettingStore', {
               facebook_token: element.facebook_token ?? '',
               facebook_verify_password: element.facebook_verify_password ?? '',
               greeting_prompt: element.greeting_prompt ?? '',
+              model_name: element.model_name ?? '',
+              model_type: element.model_type ?? 'local',
+              api_key: element.api_key ?? ''
             }
           },
         )
@@ -54,6 +57,9 @@ export const useSettingStore = defineStore('SettingStore', {
       facebook_token: string; 
       facebook_verify_password: string; 
       greeting_prompt: string; 
+      model_name: string;
+      model_type: string;
+      api_key: string;
     }) {
       try {
         const response = await fetch(`${CONFIG.API_BASE_URL}/setting/general`, {
@@ -76,11 +82,15 @@ export const useSettingStore = defineStore('SettingStore', {
           fb_activate: newSetting.fb_activate ?? false,
           product_activate: newSetting.product_activate ?? false,
           feedback_activate: newSetting.feedback_activate ?? false,
+          greeting_activate: newSetting.greeting_activate ?? false,
           line_key: newSetting.line_key ?? '',
           line_secret: newSetting.line_secret ?? '',
           facebook_token: newSetting.facebook_token ?? '',
           facebook_verify_password: newSetting.facebook_verify_password ?? '',
           greeting_prompt: newSetting.greeting_prompt ?? '',
+          model_name: newSetting.model_name ?? '',
+          model_type: newSetting.model_type ?? 'local',
+          api_key: newSetting.api_key ?? ''
         }
       } catch (error) {
         console.error('Failed to create Setting:', error)
@@ -98,6 +108,9 @@ export const useSettingStore = defineStore('SettingStore', {
       facebook_token: string; 
       facebook_verify_password: string; 
       greeting_prompt: string; 
+      model_name: string;
+      model_type: string;
+      api_key: string;
     }) {
       try {
         console.log("newSetting :",newSetting)
@@ -115,7 +128,7 @@ export const useSettingStore = defineStore('SettingStore', {
           return;
         }
       } catch (error) {
-        console.error('Failed to create Setting:', error)
+        console.error('Failed to save Setting:', error)
       }
     },
   },

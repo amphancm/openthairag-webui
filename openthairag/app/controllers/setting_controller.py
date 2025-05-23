@@ -6,7 +6,22 @@ from bson.json_util import dumps
 mongo=Connection('otg_db')
 
 def setting_post(data):
-    result = mongo.setting.insert_one(data)
+    prepared_data = {
+        'line_activate': data.get('line_activate', False),
+        'fb_activate': data.get('fb_activate', False),
+        'product_activate': data.get('product_activate', False),
+        'feedback_activate': data.get('feedback_activate', False),
+        'greeting_activate': data.get('greeting_activate', False),
+        'line_key': data.get('line_key', ''),
+        'line_secret': data.get('line_secret', ''),
+        'facebook_token': data.get('facebook_token', ''),
+        'facebook_verify_password': data.get('facebook_verify_password', ''),
+        'greeting_prompt': data.get('greeting_prompt', ''),
+        'model_name': data.get('model_name', ''),
+        'model_type': data.get('model_type', 'local'),
+        'api_key': data.get('api_key', '')
+    }
+    result = mongo.setting.insert_one(prepared_data)
     return jsonify({
         "message": "Data inserted successfully", 
         "id": str(result.inserted_id) 
@@ -27,7 +42,10 @@ def setting_patch(data):
             'line_secret': data['line_secret'],
             'facebook_token': data['facebook_token'],
             'facebook_verify_password': data['facebook_verify_password'],
-            'greeting_prompt': data['greeting_prompt']
+            'greeting_prompt': data['greeting_prompt'],
+            'model_name': data.get('model_name', ''),
+            'model_type': data.get('model_type', 'local'),
+            'api_key': data.get('api_key', '')
         }
     })
     return jsonify({
