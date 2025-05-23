@@ -53,13 +53,10 @@ describe('SettingView.vue', () => {
 
   describe('handleSave validation', () => {
     it('API - Model Name Missing: shows alert and does not save', async () => {
-      // Note: The lines with `await wrapper.vm.modelType.value === 'api'` are comparisons, not assignments,
-      // and likely not doing what was intended for setup.
-      // We should directly assign to the .value property of the exposed refs.
-      
-      wrapper.vm.modelType.value = 'api';
-      wrapper.vm.modelName.value = '';
-      wrapper.vm.apiKey.value = 'valid-key';
+      // Assign directly to the exposed properties, as they are auto-unwrapped.
+      wrapper.vm.modelType = 'api';
+      wrapper.vm.modelName = '';
+      wrapper.vm.apiKey = 'valid-key';
       await wrapper.vm.$nextTick(); // Wait for DOM updates if any
 
 
@@ -71,9 +68,9 @@ describe('SettingView.vue', () => {
     })
 
     it('API - API Key Missing: shows alert and does not save', async () => {
-      wrapper.vm.modelType.value = 'api'
-      wrapper.vm.modelName.value = 'valid-model'
-      wrapper.vm.apiKey.value = ''
+      wrapper.vm.modelType = 'api'
+      wrapper.vm.modelName = 'valid-model'
+      wrapper.vm.apiKey = ''
       await wrapper.vm.$nextTick();
 
       await wrapper.vm.handleSave()
@@ -84,9 +81,9 @@ describe('SettingView.vue', () => {
     })
 
     it('API - Valid: calls saveSetting with correct payload', async () => {
-      wrapper.vm.modelType.value = 'api'
-      wrapper.vm.modelName.value = 'gpt-4'
-      wrapper.vm.apiKey.value = 'secret-api-key'
+      wrapper.vm.modelType = 'api'
+      wrapper.vm.modelName = 'gpt-4'
+      wrapper.vm.apiKey = 'secret-api-key'
       await wrapper.vm.$nextTick();
 
       await wrapper.vm.handleSave()
@@ -113,9 +110,9 @@ describe('SettingView.vue', () => {
           stubs: {}
         }
       })
-      newWrapper.vm.modelType.value = 'api'
-      newWrapper.vm.modelName.value = 'gpt-4-new'
-      newWrapper.vm.apiKey.value = 'secret-api-key-new'
+      newWrapper.vm.modelType = 'api'
+      newWrapper.vm.modelName = 'gpt-4-new'
+      newWrapper.vm.apiKey = 'secret-api-key-new'
       await newWrapper.vm.$nextTick();
 
       await newWrapper.vm.handleSave()
@@ -133,8 +130,8 @@ describe('SettingView.vue', () => {
     })
 
     it('Local - Model Name Missing: shows alert and does not save', async () => {
-      wrapper.vm.modelType.value = 'local'
-      wrapper.vm.modelName.value = ''
+      wrapper.vm.modelType = 'local'
+      wrapper.vm.modelName = ''
       await wrapper.vm.$nextTick();
 
       await wrapper.vm.handleSave()
@@ -145,9 +142,9 @@ describe('SettingView.vue', () => {
     })
 
     it('Local - Valid: calls saveSetting with correct payload', async () => {
-      wrapper.vm.modelType.value = 'local'
-      wrapper.vm.modelName.value = 'llama2'
-      wrapper.vm.apiKey.value = '' // Should be ignored for local
+      wrapper.vm.modelType = 'local'
+      wrapper.vm.modelName = 'llama2'
+      wrapper.vm.apiKey = '' // Should be ignored for local
       await wrapper.vm.$nextTick();
 
       await wrapper.vm.handleSave()
@@ -174,10 +171,10 @@ describe('SettingView.vue', () => {
           stubs: {}
         }
       })
-      newWrapper.vm.modelType.value = 'local'
-      newWrapper.vm.modelName.value = 'llama2-new'
+      newWrapper.vm.modelType = 'local'
+      newWrapper.vm.modelName = 'llama2-new'
       // No apiKey for local, or it should be empty
-      newWrapper.vm.apiKey.value = ''; 
+      newWrapper.vm.apiKey = ''; 
       await newWrapper.vm.$nextTick();
       
       await newWrapper.vm.handleSave()
