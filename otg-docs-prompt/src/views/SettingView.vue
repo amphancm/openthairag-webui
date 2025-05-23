@@ -238,23 +238,31 @@
 
 <script lang="ts" setup>
 import { useSettingStore } from '@/stores/setting'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, defineExpose } from 'vue'
 
 const settingStore = useSettingStore()
-const setting = computed(() => ({
-  ...settingStore.Settings,
-  id: settingStore.Settings.id,
-  fb_activate: Boolean(settingStore.Settings.fb_activate),
-  line_activate: Boolean(settingStore.Settings.line_activate),
-  product_activate: Boolean(settingStore.Settings.product_activate),
-  feedback_activate: Boolean(settingStore.Settings.feedback_activate),
-  greeting_activate: Boolean(settingStore.Settings.greeting_activate),
-  greeting_prompt: String(settingStore.Settings.greeting_prompt),
-  line_key: String(settingStore.Settings.line_key),
-  line_secret: String(settingStore.Settings.line_secret),
-  facebook_token: String(settingStore.Settings.facebook_token),
-  facebook_verify_password: String(settingStore.Settings.facebook_verify_password)
-}))
+const setting = computed(() => {
+  const settings = settingStore.Settings;
+  return {
+    // Explicitly define each field from the store that this computed property needs.
+    id: typeof settings.id === 'string' ? settings.id : '', // Assuming id should be a string
+
+    fb_activate: typeof settings.fb_activate === 'boolean' ? settings.fb_activate : false,
+    line_activate: typeof settings.line_activate === 'boolean' ? settings.line_activate : false,
+    product_activate: typeof settings.product_activate === 'boolean' ? settings.product_activate : false,
+    feedback_activate: typeof settings.feedback_activate === 'boolean' ? settings.feedback_activate : false,
+    greeting_activate: typeof settings.greeting_activate === 'boolean' ? settings.greeting_activate : false,
+
+    greeting_prompt: typeof settings.greeting_prompt === 'string' ? settings.greeting_prompt : '',
+    line_key: typeof settings.line_key === 'string' ? settings.line_key : '',
+    line_secret: typeof settings.line_secret === 'string' ? settings.line_secret : '',
+    facebook_token: typeof settings.facebook_token === 'string' ? settings.facebook_token : '',
+    facebook_verify_password: typeof settings.facebook_verify_password === 'string' ? settings.facebook_verify_password : '',
+
+    // model_name, model_type, api_key are handled by separate local refs (modelName, modelType, apiKey)
+    // and are intentionally not included in this computed property as per instructions.
+  };
+})
 const isLineTokenEnabled = ref(false)
 const isFacebookTokenEnabled = ref(false)
 const isProductTokenEnabled = ref(false)
@@ -277,9 +285,16 @@ onMounted(async () => {
   isGreetingEnabled.value = Boolean(settingStore.Settings.greeting_activate)
   
   // Populate new model config fields
-  modelName.value = settingStore.Settings.model_name || ''
-  modelType.value = settingStore.Settings.model_type || 'local'
-  apiKey.value = settingStore.Settings.api_key || ''
+  // Explicitly handle potential boolean type from store's generic Record type,
+  // even though the store logic aims to make them strings.
+  const modelNameFromStore = settingStore.Settings.model_name;
+  modelName.value = typeof modelNameFromStore === 'string' ? modelNameFromStore : '';
+
+  const modelTypeFromStore = settingStore.Settings.model_type;
+  modelType.value = typeof modelTypeFromStore === 'string' ? modelTypeFromStore : 'local';
+  
+  const apiKeyFromStore = settingStore.Settings.api_key;
+  apiKey.value = typeof apiKeyFromStore === 'string' ? apiKeyFromStore : '';
 })
 
 function openModal() {
@@ -347,4 +362,11 @@ async function handleSave() {
     }
   }
 }
+
+defineExpose({
+  modelName,
+  modelType,
+  apiKey,
+  handleSave
+});
 </script>
