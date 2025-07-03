@@ -42,6 +42,11 @@
         >
           Login
         </button>
+        <div v-if="loginMessage"
+             :class="{ 'success-message': loginMessageType === 'success', 'error-message': loginMessageType === 'error' }"
+             class="mt-4 text-center">
+          {{ loginMessage }}
+        </div>
       </form>
     </div>
   </div>
@@ -55,6 +60,8 @@
   const username = ref("");
   const password = ref("");
   const remember = ref(false);
+  const loginMessage = ref(""); // To store login status message
+  const loginMessageType = ref(""); // 'success' or 'error' for styling
   const authenticationStore = useAuthenticationStore()
     
   onMounted(() => {
@@ -65,27 +72,45 @@
   });
   const handleLogin = async () => {
     localStorage.removeItem("token")
-    await authenticationStore.login({
+    loginMessage.value = ""; // Clear previous messages
+    loginMessageType.value = "";
+
+    const response = await authenticationStore.login({
       username: username.value,
       password: password.value,
       remember: remember.value
-    })
+    });
 
-    const token = ref(localStorage.getItem("token"));
-    console.log(token.value);
-    if (token.value) {
+    if (response && response.access_token) {
+      loginMessage.value = response.message || "Login successful!";
+      loginMessageType.value = "success";
+      // Token is already set in localStorage by the store
       await authenticationStore.getProfile();
+      // Instead of location.reload(), navigate to ensure Vue router handles it smoothly
+      // router.push({ path: "/" }).catch((err) => console.error(err));
+      // Forcing a reload might be desired for some applications, but let's try router push first.
+      // If a full reload is essential, location.reload() can be reinstated.
+      // For now, to match existing behavior closely:
       location.reload();
-      // 
-      
     } else {
-      // If token does not exist, log an error or redirect to login
-      console.error("Token is missing in localStorage.");
-      router.push({ path: "/login" }).catch((err) => console.error(err));
+      loginMessage.value = response && response.message ? response.message : "Login failed. Please check your credentials.";
+      loginMessageType.value = "error";
+      // No need to push to /login, already on the login page.
+      // console.error("Token is missing in localStorage or login failed.");
     }
   };
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+.success-message {
+  color: green;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
 </style>

@@ -20,8 +20,11 @@ export const useAuthenticationStore = defineStore('authenticationStore', {
             localStorage.setItem('username', body.username);
             localStorage.setItem('token', data.access_token);
           }
+          return data; // Return the response data
       } catch (error) {
-          console.error('Failed to fetch authentications:', error)
+          console.error('Failed to fetch authentications:', error);
+          // It might be useful to return a generic error object or re-throw
+          return { message: 'Login failed due to a network or server error.' };
       }
     },
     async logout() {
